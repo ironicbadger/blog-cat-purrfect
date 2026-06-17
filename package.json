@@ -1,0 +1,28 @@
+{
+  "name": "cat-blog-purrfect",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "npm run validate:covers && astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "check": "astro check",
+    "migrate:ghost": "node scripts/migrate-ghost.mjs",
+    "validate:covers": "node scripts/validate-covers.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "latest",
+    "@astrojs/sitemap": "latest",
+    "astro": "latest",
+    "cheerio": "latest",
+    "js-yaml": "latest",
+    "turndown": "latest",
+    "turndown-plugin-gfm": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "image-size": "^2.0.2",
+    "typescript": "latest"
+  }
+}

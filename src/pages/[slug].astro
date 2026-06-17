@@ -1,0 +1,75 @@
+---
+import { getCollection, render } from 'astro:content';
+import ChallengeList from '@/components/ChallengeList.astro';
+import MetadataTable from '@/components/MetadataTable.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate, isPublished, slugifyTag } from '@/lib/posts';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts')).filter(isPublished);
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const allPosts = (await getCollection('posts')).filter(isPublished);
+const isChallengeList = post.data.slug === 'the-list-2026';
+
+const coverSrcSelector = post.data.cover ? JSON.stringify(post.data.cover) : undefined;
+const duplicateCoverStyles = coverSrcSelector
+  ? `.prose p:has(> img[src=${coverSrcSelector}]:only-child) { display: none; }
+.prose img[src=${coverSrcSelector}] { display: none; }`
+  : undefined;
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.cover}
+>
+  {duplicateCoverStyles && <style is:inline set:html={duplicateCoverStyles} />}
+  <article class="post-page">
+    <header class="post-hero">
+      <div class="post-hero-copy">
+        <p class="eyebrow">
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+          <span>by {post.data.author}</span>
+        </p>
+        <h1>{post.data.title}</h1>
+        {
+          (post.data.bookTitle || post.data.bookAuthor) && (
+            <p class="book-line large">
+              {post.data.bookTitle}
+              {post.data.bookAuthor && <> by {post.data.bookAuthor}</>}
+            </p>
+          )
+        }
+        {
+          post.data.tags.length > 0 && (
+            <ul class="tag-list">
+              {post.data.tags.map((tag) => (
+                <li><a href={`/tag/${slugifyTag(tag)}/`}>{tag}</a></li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+      {
+        post.data.cover && (
+          <img class="post-hero-cover" src={post.data.cover} alt="" loading="eager" />
+        )
+      }
+    </header>
+
+    <div class:list={['post-body-grid', { 'is-full-width': isChallengeList }]}>
+      <div class="prose">
+        <Content />
+        {isChallengeList && <ChallengeList post={post} posts={allPosts} />}
+      </div>
+      {!isChallengeList && <MetadataTable post={post} />}
+    </div>
+  </article>
+</BaseLayout>

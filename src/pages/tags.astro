@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getAllTags, isPublished } from '@/lib/posts';
+
+const posts = (await getCollection('posts')).filter(isPublished);
+const tags = getAllTags(posts);
+---
+
+<BaseLayout title="Tags" description="Browse PurrfectProse reviews by tag.">
+  <section class="page-heading">
+    <p class="eyebrow">Browse by subject</p>
+    <h1>Tags</h1>
+  </section>
+
+  <ul class="tag-cloud">
+    {
+      tags.map((tag) => (
+        <li>
+          <a href={`/tag/${tag.slug}/`}>
+            <span>{tag.name}</span>
+            <strong>{tag.count}</strong>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

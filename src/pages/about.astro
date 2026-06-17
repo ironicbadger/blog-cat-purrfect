@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const page = (await getCollection('pages')).find((entry) => entry.data.slug === 'about');
+const rendered = page ? await render(page) : undefined;
+const Content = rendered?.Content;
+---
+
+<BaseLayout title="About" description={page?.data.description ?? 'About PurrfectProse.'}>
+  <section class="page-heading">
+    <p class="eyebrow">About</p>
+    <h1>PurrfectProse</h1>
+  </section>
+
+  <div class="prose narrow">
+    {Content ? <Content /> : (
+      <p>
+        PurrfectProse is Catherine's home for book reviews, reading challenges,
+        audiobook notes, and family reading logs.
+      </p>
+    )}
+  </div>
+</BaseLayout>

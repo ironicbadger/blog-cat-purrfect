@@ -1,0 +1,34 @@
+---
+import type { Post } from '@/lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const rows = [
+  ['Book', post.data.bookTitle],
+  ['Book author', post.data.bookAuthor],
+  ['Published', post.data.publicationYear ? String(post.data.publicationYear) : undefined],
+  ['Format', post.data.format],
+  ['Outcome', post.data.outcome],
+  ['Rating', post.data.rating ? String(post.data.rating) : undefined],
+  ['Genres', post.data.genres.join(', ')],
+].filter(([, value]) => value);
+---
+
+{
+  rows.length > 0 && (
+    <aside class="metadata-panel" aria-label="Book metadata">
+      <h2>Details</h2>
+      <dl>
+        {rows.map(([label, value]) => (
+          <>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </>
+        ))}
+      </dl>
+    </aside>
+  )
+}

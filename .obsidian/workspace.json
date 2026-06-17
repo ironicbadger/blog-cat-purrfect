@@ -1,0 +1,244 @@
+{
+  "main": {
+    "id": "f076689b5a4a2a0b",
+    "type": "split",
+    "children": [
+      {
+        "id": "100479abe80db098",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5277554ff5dd1454",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "src/content/posts/2026-06-16-26-may-theme-was-the-book-or-the-movie-better.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-06-16-26-may-theme-was-the-book-or-the-movie-better"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1256e79848ecfc34",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "090746b077eeff7e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "src/content/posts/2026-05-24-reading-with-ella-book-22.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-05-24-reading-with-ella-book-22"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1cc9eb3b695b87f5",
+    "type": "split",
+    "children": [
+      {
+        "id": "8c10567cece6b478",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "364dc5bd50c1c400",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "d5df046b65f38056",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "a87ee4c80af22979",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "8320620c4ae24bf3",
+    "type": "split",
+    "children": [
+      {
+        "id": "2c28fbee7e0026cb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dd04e680ac924e11",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "src/content/posts/2026-06-16-26-may-theme-was-the-book-or-the-movie-better.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 2026-06-16-26-may-theme-was-the-book-or-the-movie-better"
+            }
+          },
+          {
+            "id": "7c3a77e8969b0622",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "src/content/posts/2026-06-16-26-may-theme-was-the-book-or-the-movie-better.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from 2026-06-16-26-may-theme-was-the-book-or-the-movie-better"
+            }
+          },
+          {
+            "id": "7aa208264691bab3",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "2b61e4d8283bc3cd",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "cb9a1b181af8b49f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "src/content/posts/2026-06-16-26-may-theme-was-the-book-or-the-movie-better.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 2026-06-16-26-may-theme-was-the-book-or-the-movie-better"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "5277554ff5dd1454",
+  "lastOpenFiles": [
+    "dist/sitemap-0.xml",
+    "dist/sitemap-index.xml",
+    "dist/index.html",
+    "dist/the-list-2027/index.html",
+    "dist/the-list-2027",
+    "dist/the-list-2026/index.html",
+    "dist/the-list-2026",
+    "dist/the-list-2025/index.html",
+    "dist/the-list-2025",
+    "dist/the-list/index.html",
+    "dist/the-list",
+    "dist/images/ghost/2026/04/shopping--5-.webp",
+    "dist/images/ghost/2026/04/shopping--4-.webp",
+    "dist/images/ghost/2026/04/shopping--3-.webp",
+    "dist/images/ghost/2026/04/shopping--1-.webp",
+    "dist/images/ghost/2026/02/storm.jpeg",
+    "dist/images/ghost/2026/02/shopping.webp",
+    "dist/images/ghost/2026/02/download--1-.jpeg",
+    "dist/images/ghost/2026/01/shopping.webp",
+    "dist/images/ghost/2026/01/download.jpeg",
+    "dist/images/ghost/2026/01/download-1.jpeg",
+    "src/content/posts/2025-08-02-audiobook-somewhere-beyond-the-sea-t-j-klune.md",
+    "src/content/posts/2026-05-24-reading-with-ella-book-22.md",
+    "README.md",
+    "node_modules/image-size/Readme.md",
+    "node_modules/fsevents/README.md",
+    "node_modules/tslib/SECURITY.md",
+    "node_modules/tslib/README.md",
+    "src/content/posts/2026-05-20-reading-with-ella-book-20.md",
+    "src/content/posts/2026-04-21-26-january-theme-black-history-month.md",
+    "src/content/posts/2025-12-02-additional-review-j-a-romance-for-the-lesbian-swifties.md",
+    "src/content/posts/2025-09-06-reading-with-ella-book-5.md",
+    "src/content/posts/2025-11-30-reading-with-ella-book-14.md",
+    "src/content/posts/2024-03-11-march.md"
+  ]
+}

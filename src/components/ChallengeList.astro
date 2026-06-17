@@ -1,0 +1,99 @@
+---
+import type { Post } from '@/lib/posts';
+import { postUrl } from '@/lib/posts';
+
+interface Props {
+  post: Post;
+  posts: Post[];
+}
+
+const { post, posts } = Astro.props;
+const items = post.data.challengeItems ?? [];
+const bySlug = new Map(posts.map((entry) => [entry.data.slug, entry]));
+
+function normalize(value = '') {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function reviewFor(item: (typeof items)[number]) {
+  if (item.reviewSlug) return bySlug.get(item.reviewSlug);
+  const title = normalize(item.bookTitle);
+  if (!title) return undefined;
+  return posts.find((entry) => normalize(entry.data.bookTitle).includes(title));
+}
+
+const completed = items.filter((item) => item.done).length;
+---
+
+<section class="challenge-list" aria-labelledby="challenge-list-heading">
+  <div class="challenge-summary">
+    <div>
+      <p class="eyebrow">Reading challenge</p>
+      <h2 id="challenge-list-heading">2026 master list</h2>
+    </div>
+    <p><strong>{completed}</strong> of <strong>{items.length}</strong> complete</p>
+  </div>
+
+  <div class="challenge-table-wrap">
+    <table class="challenge-table">
+      <thead>
+        <tr>
+          <th scope="col">Status</th>
+          <th scope="col">Month</th>
+          <th scope="col">Cover</th>
+          <th scope="col">Challenge</th>
+          <th scope="col">Selection</th>
+          <th scope="col">Review</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map((item) => {
+            const review = reviewFor(item);
+            const cover = review?.data.cover;
+            const selection = item.bookTitle ?? item.selection ?? 'TBC';
+
+            return (
+              <tr class={item.done ? 'is-complete' : 'is-planned'}>
+                <td data-label="Status">
+                  <span class="status-pill">
+                    <span class="status-box" aria-hidden="true"></span>
+                    {item.done ? 'Done' : 'Planned'}
+                  </span>
+                </td>
+                <th scope="row" data-label="Month">{item.month}</th>
+                <td data-label="Cover">
+                  {
+                    cover ? (
+                      <img class="challenge-cover" src={cover} alt="" loading="lazy" />
+                    ) : (
+                      <span class="challenge-cover-placeholder" aria-hidden="true">
+                        {item.month.slice(0, 3)}
+                      </span>
+                    )
+                  }
+                </td>
+                <td data-label="Challenge">
+                  <span class="challenge-prompt">{item.prompt}</span>
+                </td>
+                <td data-label="Selection">
+                  <span class="challenge-selection">{selection}</span>
+                  {item.bookAuthor && <small>by {item.bookAuthor}</small>}
+                </td>
+                <td data-label="Review">
+                  {
+                    review ? (
+                      <a class="review-link" href={postUrl(review)}>Read</a>
+                    ) : (
+                      <span class="review-pending">Not posted</span>
+                    )
+                  }
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

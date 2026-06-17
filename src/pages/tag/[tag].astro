@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import { getAllTags, isPublished, slugifyTag, sortPosts, titleCaseSlug } from '@/lib/posts';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts')).filter(isPublished);
+  return getAllTags(posts).map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tagName: tag.name },
+  }));
+}
+
+const { tag } = Astro.params;
+const { tagName } = Astro.props;
+const posts = sortPosts(
+  (await getCollection('posts')).filter(
+    (post) => isPublished(post) && post.data.tags.some((item) => slugifyTag(item) === tag)
+  )
+);
+const title = tagName ?? titleCaseSlug(tag ?? '');
+---
+
+<BaseLayout title={title} description={`PurrfectProse reviews tagged ${title}.`}>
+  <section class="page-heading">
+    <p class="eyebrow">Tagged reviews</p>
+    <h1>{title}</h1>
+  </section>
+
+  <div class="post-list">
+    {posts.map((post) => <PostCard post={post} />)}
+  </div>
+</BaseLayout>

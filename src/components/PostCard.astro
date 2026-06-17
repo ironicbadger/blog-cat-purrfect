@@ -1,0 +1,74 @@
+---
+import type { Post } from '@/lib/posts';
+import { excerptFor, formatDate, postCategories, postUrl, slugifyTag } from '@/lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const tags = post.data.tags.slice(0, 5);
+const searchable = [
+  post.data.title,
+  post.data.description,
+  post.data.bookTitle,
+  post.data.bookAuthor,
+  post.data.author,
+  post.data.format,
+  post.data.outcome,
+  ...post.data.tags,
+  ...post.data.genres,
+].filter(Boolean).join(' ').toLowerCase();
+---
+
+<article
+  class="post-card"
+  data-post-card
+  data-search={searchable}
+  data-year={post.data.pubDate.getUTCFullYear()}
+  data-author={post.data.author}
+  data-book-author={post.data.bookAuthor ?? ''}
+  data-format={post.data.format ?? ''}
+  data-outcome={post.data.outcome ?? ''}
+  data-tags={post.data.tags.map(slugifyTag).join('|')}
+  data-genres={post.data.genres.map(slugifyTag).join('|')}
+  data-categories={postCategories(post).join('|')}
+>
+  <a class="post-card-link" href={postUrl(post)} aria-label={`Read ${post.data.title}`}>
+    {
+      post.data.cover ? (
+        <img class="post-card-cover" src={post.data.cover} alt="" loading="lazy" />
+      ) : (
+        <div class="post-card-placeholder" aria-hidden="true">
+          <span>{post.data.bookTitle?.charAt(0) ?? post.data.title.charAt(0)}</span>
+        </div>
+      )
+    }
+    <div class="post-card-copy">
+      <div class="post-card-meta">
+        <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+        {post.data.format && <span>{post.data.format}</span>}
+        {post.data.outcome && <span>{post.data.outcome}</span>}
+      </div>
+      <h2>{post.data.title}</h2>
+      {
+        (post.data.bookTitle || post.data.bookAuthor) && (
+          <p class="book-line">
+            {post.data.bookTitle}
+            {post.data.bookAuthor && <> by {post.data.bookAuthor}</>}
+          </p>
+        )
+      }
+      {post.data.description && <p>{excerptFor(post)}</p>}
+      {
+        tags.length > 0 && (
+          <ul class="tag-list" aria-label="Tags">
+            {tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </a>
+</article>

@@ -1,0 +1,169 @@
+---
+import type { CategoryId, Post } from '@/lib/posts';
+import {
+  categoryCount,
+  categoryDefinitions,
+  excerptFor,
+  postCategories,
+  postUrl,
+} from '@/lib/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const coverLimit = 33;
+const rowSize = 11;
+
+type ShowcaseCover = {
+  src: string;
+  title: string;
+};
+
+const usedShowcaseCovers = new Set<string>();
+const showcaseCovers = new Map<CategoryId, ShowcaseCover[]>();
+
+for (const category of categoryDefinitions) {
+  const covers = posts
+    .filter((post) => postCategories(post).includes(category.id) && post.data.cover)
+    .map((post) => ({
+      src: post.data.cover as string,
+      title: post.data.bookTitle ?? post.data.title,
+    }))
+    .filter((cover) => !usedShowcaseCovers.has(cover.src))
+    .slice(0, coverLimit);
+
+  covers.forEach((cover) => usedShowcaseCovers.add(cover.src));
+  showcaseCovers.set(category.id, covers);
+}
+
+function rowsFor(categoryId: CategoryId) {
+  const covers = showcaseCovers.get(categoryId) ?? [];
+  return Array.from({ length: Math.ceil(covers.length / rowSize) }, (_, index) =>
+    covers.slice(index * rowSize, index * rowSize + rowSize)
+  );
+}
+
+const randomReviews = posts
+  .filter((post) => post.data.cover && post.data.description && post.data.format !== 'Note')
+  .map((post) => ({
+    title: post.data.bookTitle ?? post.data.title,
+    reviewTitle: post.data.title,
+    bookTitle: post.data.bookTitle,
+    bookAuthor: post.data.bookAuthor ?? 'Unknown',
+    publicationYear: post.data.publicationYear ?? 'TBC',
+    readingYear: post.data.pubDate.getUTCFullYear(),
+    cover: post.data.cover,
+    excerpt: excerptFor(post, 220),
+    url: postUrl(post),
+  }));
+
+const fallbackReview = randomReviews[0];
+---
+
+<section class="category-showcase" aria-labelledby="category-heading">
+  <div class="category-heading">
+    <p class="eyebrow">What to read next</p>
+    <h1 id="category-heading">Choose a shelf</h1>
+  </div>
+
+  <div class="category-grid">
+    {
+      categoryDefinitions.map((category) => (
+        <a class={`category-card category-card-${category.id}`} href={category.href}>
+          <div class="category-art" aria-hidden="true">
+            <div class="cover-grid">
+              {rowsFor(category.id).map((row) => (
+                <div class="cover-row">
+                  {row.map((cover) => (
+                    <span class="cover-tile">
+                      <img src={cover.src} alt="" loading="lazy" />
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="category-copy">
+            <span>{categoryCount(posts, category.id)} reviews</span>
+            <h2>{category.label}</h2>
+            <p>{category.description}</p>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+
+  {
+    fallbackReview && (
+      <section class="random-review" aria-labelledby="random-review-heading" data-random-review>
+        <div class="random-review-media">
+          <img src={fallbackReview.cover} alt="" loading="lazy" data-random-cover />
+        </div>
+        <div class="random-review-copy">
+          <div class="random-review-top">
+            <p class="eyebrow">Review roulette</p>
+            <div class="random-review-facts" aria-label="Book details">
+              <p>
+                <span>Author</span>
+                <strong data-random-author>{fallbackReview.bookAuthor}</strong>
+              </p>
+              <p>
+                <span>Published</span>
+                <strong data-random-publication-year>{fallbackReview.publicationYear}</strong>
+              </p>
+              <p>
+                <span>Read</span>
+                <strong data-random-reading-year>{fallbackReview.readingYear}</strong>
+              </p>
+            </div>
+          </div>
+          <h2 id="random-review-heading" data-random-title>{fallbackReview.title}</h2>
+          <p class="random-review-excerpt" data-random-excerpt>{fallbackReview.excerpt}</p>
+          <a class="review-link" href={fallbackReview.url} data-random-link>Read review</a>
+        </div>
+        <script is:inline type="application/json" data-random-review-data set:html={JSON.stringify(randomReviews)} />
+      </section>
+    )
+  }
+</section>
+
+<script>
+  const widget = document.querySelector<HTMLElement>('[data-random-review]');
+
+  if (widget) {
+    const setRouletteVisibility = (category: string | null) => {
+      widget.hidden = Boolean(category);
+    };
+
+    const dataNode = widget.querySelector<HTMLScriptElement>('[data-random-review-data]');
+    const reviews = dataNode?.textContent ? JSON.parse(dataNode.textContent) : [];
+    const review = reviews[Math.floor(Math.random() * reviews.length)];
+
+    if (review) {
+      const cover = widget.querySelector<HTMLImageElement>('[data-random-cover]');
+      const title = widget.querySelector<HTMLElement>('[data-random-title]');
+      const author = widget.querySelector<HTMLElement>('[data-random-author]');
+      const publicationYear = widget.querySelector<HTMLElement>('[data-random-publication-year]');
+      const readingYear = widget.querySelector<HTMLElement>('[data-random-reading-year]');
+      const excerpt = widget.querySelector<HTMLElement>('[data-random-excerpt]');
+      const link = widget.querySelector<HTMLAnchorElement>('[data-random-link]');
+
+      if (cover) cover.src = review.cover;
+      if (title) title.textContent = review.title;
+      if (author) author.textContent = review.bookAuthor ?? 'Unknown';
+      if (publicationYear) publicationYear.textContent = String(review.publicationYear ?? 'TBC');
+      if (readingYear) readingYear.textContent = String(review.readingYear ?? 'TBC');
+      if (excerpt) excerpt.textContent = review.excerpt;
+      if (link) link.href = review.url;
+    }
+
+    setRouletteVisibility(new URLSearchParams(location.search).get('category'));
+
+    window.addEventListener('review-filters-changed', (event) => {
+      const detail = (event as CustomEvent<{ category?: string }>).detail;
+      setRouletteVisibility(detail?.category ?? null);
+    });
+  }
+</script>

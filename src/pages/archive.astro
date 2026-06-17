@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate, getYearGroups, isPublished, postUrl, sortPosts } from '@/lib/posts';
+
+const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+const groups = getYearGroups(posts);
+---
+
+<BaseLayout title="Archive" description="A chronological list of every PurrfectProse review.">
+  <section class="page-heading">
+    <p class="eyebrow">Chronological archive</p>
+    <h1>All reviews by date</h1>
+  </section>
+
+  <div class="archive-list">
+    {
+      groups.map(([year, yearPosts]) => (
+        <section class="archive-year">
+          <h2>{year}</h2>
+          <ol>
+            {yearPosts.map((post) => (
+              <li>
+                <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                <a href={postUrl(post)}>{post.data.title}</a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
