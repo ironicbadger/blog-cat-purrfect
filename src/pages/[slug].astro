@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const allPosts = (await getCollection('posts')).filter(isPublished);
-const isChallengeList = post.data.slug === 'the-list-2026';
+const isChallengeList = (post.data.challengeItems?.length ?? 0) > 0;
 
 const coverSrcSelector = post.data.cover ? JSON.stringify(post.data.cover) : undefined;
 const duplicateCoverStyles = coverSrcSelector

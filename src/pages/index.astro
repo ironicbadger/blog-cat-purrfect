@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import CategoryShowcase from '@/components/CategoryShowcase.astro';
-import FilteredPostList from '@/components/FilteredPostList.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { isPublished, sortPosts } from '@/lib/posts';
 import { SITE } from '@/lib/site';
@@ -12,5 +11,4 @@ const posts = sortPosts((await getCollection('posts')).filter(isPublished));
 <BaseLayout title={SITE.title} description={SITE.description}>
   <h1 class="visually-hidden">PurrfectProse</h1>
   <CategoryShowcase posts={posts} />
-  <FilteredPostList posts={posts} />
 </BaseLayout>

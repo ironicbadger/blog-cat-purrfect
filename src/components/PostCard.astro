@@ -1,6 +1,13 @@
 ---
 import type { Post } from '@/lib/posts';
-import { excerptFor, formatDate, postCategories, postUrl, slugifyTag } from '@/lib/posts';
+import {
+  categoryDefinitions,
+  excerptFor,
+  formatDate,
+  postCategories,
+  postUrl,
+  slugifyTag,
+} from '@/lib/posts';
 
 interface Props {
   post: Post;
@@ -8,6 +15,13 @@ interface Props {
 
 const { post } = Astro.props;
 const tags = post.data.tags.slice(0, 5);
+const categories = postCategories(post);
+const categoryLabels = categories
+  .map((categoryId) => categoryDefinitions.find((category) => category.id === categoryId)?.label)
+  .filter(Boolean);
+const readYear = post.data.pubDate.getUTCFullYear();
+const cardTitle = post.data.bookTitle ?? post.data.title;
+const reviewContext = post.data.bookTitle ? post.data.title : '';
 const searchable = [
   post.data.title,
   post.data.description,
@@ -16,25 +30,30 @@ const searchable = [
   post.data.author,
   post.data.format,
   post.data.outcome,
+  post.data.publicationYear?.toString(),
+  readYear.toString(),
   ...post.data.tags,
   ...post.data.genres,
-].filter(Boolean).join(' ').toLowerCase();
+  ...categories,
+  ...categoryLabels,
+].filter(Boolean).join(' | ').toLowerCase();
 ---
 
 <article
   class="post-card"
   data-post-card
   data-search={searchable}
-  data-year={post.data.pubDate.getUTCFullYear()}
+  data-year={readYear}
+  data-publication-year={post.data.publicationYear ?? ''}
   data-author={post.data.author}
   data-book-author={post.data.bookAuthor ?? ''}
   data-format={post.data.format ?? ''}
   data-outcome={post.data.outcome ?? ''}
   data-tags={post.data.tags.map(slugifyTag).join('|')}
   data-genres={post.data.genres.map(slugifyTag).join('|')}
-  data-categories={postCategories(post).join('|')}
+  data-categories={categories.join('|')}
 >
-  <a class="post-card-link" href={postUrl(post)} aria-label={`Read ${post.data.title}`}>
+  <a class="post-card-link" href={postUrl(post)} aria-label={`Read ${cardTitle}`}>
     {
       post.data.cover ? (
         <img class="post-card-cover" src={post.data.cover} alt="" loading="lazy" />
@@ -47,18 +66,13 @@ const searchable = [
     <div class="post-card-copy">
       <div class="post-card-meta">
         <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+        {post.data.publicationYear && <span>Published {post.data.publicationYear}</span>}
         {post.data.format && <span>{post.data.format}</span>}
         {post.data.outcome && <span>{post.data.outcome}</span>}
       </div>
-      <h2>{post.data.title}</h2>
-      {
-        (post.data.bookTitle || post.data.bookAuthor) && (
-          <p class="book-line">
-            {post.data.bookTitle}
-            {post.data.bookAuthor && <> by {post.data.bookAuthor}</>}
-          </p>
-        )
-      }
+      <h2>{cardTitle}</h2>
+      {post.data.bookAuthor && <p class="book-line">by {post.data.bookAuthor}</p>}
+      {reviewContext && <p class="review-context">{reviewContext}</p>}
       {post.data.description && <p>{excerptFor(post)}</p>}
       {
         tags.length > 0 && (

@@ -10,6 +10,5 @@ export const navItems = [
   { href: '/the-list-2026/', label: '2026 List' },
   { href: '/archive/', label: 'Archive' },
   { href: '/tags/', label: 'Tags' },
-  { href: '/grid/', label: 'Grid' },
   { href: '/about/', label: 'About' },
 ];

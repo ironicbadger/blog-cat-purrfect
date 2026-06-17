@@ -23,12 +23,14 @@ function reviewFor(item: (typeof items)[number]) {
 }
 
 const completed = items.filter((item) => item.done).length;
+const listYear = post.data.tags.find((tag) => /^\d{4}$/.test(tag)) ?? post.data.title.match(/\d{4}/)?.[0];
+const heading = listYear ? `${listYear} master list` : 'Master list';
 ---
 
 <section class="challenge-list" aria-labelledby="challenge-list-heading">
   <div class="challenge-summary">
     <div>
-      <h2 id="challenge-list-heading">2026 master list</h2>
+      <h2 id="challenge-list-heading">{heading}</h2>
     </div>
     <p><strong>{completed}</strong> of <strong>{items.length}</strong> complete</p>
   </div>

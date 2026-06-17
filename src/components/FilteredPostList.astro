@@ -5,10 +5,17 @@ import PostCard from './PostCard.astro';
 
 interface Props {
   posts: Post[];
+  variant?: 'page' | 'header';
 }
 
-const { posts } = Astro.props;
-const years = [...new Set(posts.map((post) => post.data.pubDate.getUTCFullYear()))].sort((a, b) => b - a);
+const { posts, variant = 'page' } = Astro.props;
+const isHeader = variant === 'header';
+const resultsId = isHeader ? 'site-search-results' : 'search-results';
+const filtersId = isHeader ? 'site-search-filters' : 'advanced-search-filters';
+const readYears = [...new Set(posts.map((post) => post.data.pubDate.getUTCFullYear()))].sort((a, b) => b - a);
+const publicationYears = [
+  ...new Set(posts.flatMap((post) => (post.data.publicationYear ? [post.data.publicationYear] : []))),
+].sort((a, b) => b - a);
 const authors = uniqueValues(posts, (post) => post.data.author);
 const bookAuthors = uniqueValues(posts, (post) => post.data.bookAuthor);
 const formats = uniqueValues(posts, (post) => post.data.format);
@@ -18,90 +25,138 @@ const genres = uniqueValues(posts, (post) => post.data.genres);
 const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => [category.id, category.label]));
 ---
 
-<section class="review-browser" data-review-browser>
-  <div class="filter-panel" aria-label="Review filters">
-    <div class="filter-stats" aria-label="Archive stats">
-      <span><strong>{posts.length}</strong> reviews</span>
-      <span><strong>{years.length}</strong> years</span>
-      <span><strong>{tags.length}</strong> tags</span>
+<section class:list={['review-browser', { 'header-search': isHeader }]} data-review-browser>
+  <div class="search-shell" role="search" aria-label="Search reviews" data-search-shell>
+    <div class="search-main">
+      <label class="unified-search-field">
+        <span class="visually-hidden">Search reviews</span>
+        <input
+          data-filter="q"
+          type="search"
+          placeholder="Search books..."
+          autocomplete="off"
+          aria-controls={resultsId}
+          aria-expanded="false"
+        />
+      </label>
+      <button
+        class="search-filter-toggle"
+        type="button"
+        aria-label="Show filters"
+        aria-expanded="false"
+        aria-controls={filtersId}
+        data-filter-toggle
+      >
+        <svg class="filter-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M21 4h-7" />
+          <path d="M10 4H3" />
+          <path d="M21 12h-9" />
+          <path d="M8 12H3" />
+          <path d="M21 20h-5" />
+          <path d="M12 20H3" />
+          <path d="M14 2v4" />
+          <path d="M8 10v4" />
+          <path d="M16 18v4" />
+        </svg>
+      </button>
+
+      <div class="search-results" id={resultsId} data-results-region hidden>
+        <div class="search-results-head">
+          <h2 data-results-heading>Search results</h2>
+          <p data-results-summary></p>
+        </div>
+        <div class="post-list" data-post-list>
+          {posts.map((post) => <PostCard post={post} />)}
+        </div>
+        <p class="empty-state" data-empty hidden>No reviews match that search.</p>
+      </div>
     </div>
 
-    <label class="search-field">
-      <span>Search reviews</span>
-      <input data-filter="q" type="search" placeholder="Title, author, tag, review text..." autocomplete="off" />
-      <input data-filter="category" type="hidden" value="" />
-    </label>
+    {
+      !isHeader && (
+        <div class="search-support">
+          <div class="filter-stats" aria-label="Archive stats">
+            <span><strong>{posts.length}</strong> reviews</span>
+            <span><strong>{readYears.length}</strong> years</span>
+            <span><strong>{tags.length}</strong> tags</span>
+          </div>
+          <p data-search-status>Search the archive by book, author, reading year, publication year, genre, tag, or review text.</p>
+        </div>
+      )
+    }
 
-    <div class="active-filter-summary" data-active-category hidden>
-      <strong data-active-category-label></strong>
-      <button type="button" data-clear-category aria-label="Clear shelf filter">x</button>
-    </div>
+    {!isHeader && <div class="active-filter-list" data-active-filters hidden></div>}
 
-    <div class="filter-grid">
-      <label>
-        <span>Year</span>
-        <select data-filter="year">
-          <option value="">All years</option>
-          {years.map((year) => <option value={year}>{year}</option>)}
-        </select>
-      </label>
-      <label>
-        <span>Format</span>
-        <select data-filter="format">
-          <option value="">All formats</option>
-          {formats.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
-        </select>
-      </label>
-      <label>
-        <span>Book author</span>
-        <select data-filter="bookAuthor">
-          <option value="">All authors</option>
-          {bookAuthors.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
-        </select>
-      </label>
-      <label>
-        <span>Reviewer</span>
-        <select data-filter="author">
-          <option value="">All reviewers</option>
-          {authors.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
-        </select>
-      </label>
-      <label>
-        <span>Genre / subject</span>
-        <select data-filter="genre">
-          <option value="">All genres</option>
-          {genres.map((item) => <option value={slugifyTag(item.name)}>{item.name} ({item.count})</option>)}
-        </select>
-      </label>
-      <label>
-        <span>Tag</span>
-        <select data-filter="tag">
-          <option value="">All tags</option>
-          {tags.map((item) => <option value={slugifyTag(item.name)}>{item.name} ({item.count})</option>)}
-        </select>
-      </label>
-      <label>
-        <span>Outcome</span>
-        <select data-filter="outcome">
-          <option value="">All outcomes</option>
-          {outcomes.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
-        </select>
-      </label>
-    </div>
-
-    <div class="filter-actions">
-      <p><strong data-count>{posts.length}</strong> reviews</p>
-      <button type="button" data-reset>Reset all</button>
+    <div class="filter-panel" id={filtersId} data-filter-panel hidden>
+      <div class="filter-grid">
+        <label>
+          <span>Shelf</span>
+          <select data-filter="category">
+            <option value="">All shelves</option>
+            {categoryDefinitions.map((category) => <option value={category.id}>{category.label}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Read year</span>
+          <select data-filter="year">
+            <option value="">All read years</option>
+            {readYears.map((year) => <option value={year}>{year}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Published year</span>
+          <select data-filter="publicationYear">
+            <option value="">All publication years</option>
+            {publicationYears.map((year) => <option value={year}>{year}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Book author</span>
+          <select data-filter="bookAuthor">
+            <option value="">All authors</option>
+            {bookAuthors.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Reviewer</span>
+          <select data-filter="author">
+            <option value="">All reviewers</option>
+            {authors.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Format</span>
+          <select data-filter="format">
+            <option value="">All formats</option>
+            {formats.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Genre / subject</span>
+          <select data-filter="genre">
+            <option value="">All genres</option>
+            {genres.map((item) => <option value={slugifyTag(item.name)}>{item.name} ({item.count})</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Tag</span>
+          <select data-filter="tag">
+            <option value="">All tags</option>
+            {tags.map((item) => <option value={slugifyTag(item.name)}>{item.name} ({item.count})</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Outcome</span>
+          <select data-filter="outcome">
+            <option value="">All outcomes</option>
+            {outcomes.map((item) => <option value={item.name}>{item.name} ({item.count})</option>)}
+          </select>
+        </label>
+      </div>
     </div>
   </div>
 
   <script is:inline type="application/json" data-category-labels set:html={JSON.stringify(categoryLabels)} />
-
-  <div class="post-list" data-post-list>
-    {posts.map((post) => <PostCard post={post} />)}
-  </div>
-
-  <p class="empty-state" data-empty hidden>No reviews match those filters.</p>
 </section>
 
 <script>
@@ -109,51 +164,252 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
 
   if (browser) {
     const cards = [...browser.querySelectorAll<HTMLElement>('[data-post-card]')];
-    const count = browser.querySelector<HTMLElement>('[data-count]');
-    const empty = browser.querySelector<HTMLElement>('[data-empty]');
     const controls = [...browser.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-filter]')];
-    const reset = browser.querySelector<HTMLButtonElement>('[data-reset]');
-    const categoryControl = browser.querySelector<HTMLInputElement>('[data-filter="category"]');
-    const activeCategory = browser.querySelector<HTMLElement>('[data-active-category]');
-    const activeCategoryLabel = browser.querySelector<HTMLElement>('[data-active-category-label]');
-    const clearCategory = browser.querySelector<HTMLButtonElement>('[data-clear-category]');
+    const searchInput = browser.querySelector<HTMLInputElement>('[data-filter="q"]');
+    const shell = browser.querySelector<HTMLElement>('[data-search-shell]');
+    const filterToggle = browser.querySelector<HTMLButtonElement>('[data-filter-toggle]');
+    const filterPanel = browser.querySelector<HTMLElement>('[data-filter-panel]');
+    const activeFilters = browser.querySelector<HTMLElement>('[data-active-filters]');
+    const resultsRegion = browser.querySelector<HTMLElement>('[data-results-region]');
+    const resultsHeading = browser.querySelector<HTMLElement>('[data-results-heading]');
+    const resultsSummary = browser.querySelector<HTMLElement>('[data-results-summary]');
+    const searchStatus = browser.querySelector<HTMLElement>('[data-search-status]');
+    const empty = browser.querySelector<HTMLElement>('[data-empty]');
     const categoryData = browser.querySelector<HTMLScriptElement>('[data-category-labels]');
     const categoryLabels = categoryData?.textContent ? JSON.parse(categoryData.textContent) : {};
+    let dropdownOpen = false;
+    let suppressNextFocusDropdown = false;
 
-    const normalize = (value: string) => value.toLowerCase().trim();
+    const normalize = (value: string) =>
+      value
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
 
-    function removeUrlParam(name: string) {
-      const params = new URLSearchParams(location.search);
-      params.delete(name);
+    const filterNames: Record<string, string> = {
+      q: 'Search',
+      category: 'Shelf',
+      year: 'Read',
+      publicationYear: 'Published',
+      bookAuthor: 'Author',
+      author: 'Reviewer',
+      format: 'Format',
+      genre: 'Genre',
+      tag: 'Tag',
+      outcome: 'Outcome',
+    };
+
+    function fuzzyWordMatches(needle: string, candidate: string) {
+      if (candidate.includes(needle)) return true;
+      if (needle.length < 5 || candidate.length < 5) return false;
+
+      let needleIndex = 0;
+      let first = -1;
+      let last = -1;
+
+      for (let index = 0; index < candidate.length && needleIndex < needle.length; index += 1) {
+        if (candidate[index] === needle[needleIndex]) {
+          if (first === -1) first = index;
+          last = index;
+          needleIndex += 1;
+        }
+      }
+
+      if (needleIndex !== needle.length || first === -1) return false;
+
+      const span = last - first + 1;
+      const density = needle.length / span;
+      const lengthDifference = Math.abs(candidate.length - needle.length);
+
+      return density >= 0.56 && lengthDifference <= Math.max(4, Math.floor(needle.length * 0.75));
+    }
+
+    function tokenMatches(token: string, fields: string[]) {
+      if (!token) return true;
+      const exactHaystack = fields.join(' ');
+      if (exactHaystack.includes(token)) return true;
+      if (token.length < 5) return false;
+
+      return fields.some((field) =>
+        field
+          .split(/[^a-z0-9]+/)
+          .filter(Boolean)
+          .some((word) => fuzzyWordMatches(token, word))
+      );
+    }
+
+    function queryMatches(query: string, search: string) {
+      const normalizedQuery = normalize(query);
+      if (!normalizedQuery) return true;
+
+      const fields = search.split('|').map(normalize).filter(Boolean);
+      const exactHaystack = fields.join(' ');
+      if (exactHaystack.includes(normalizedQuery)) return true;
+
+      return normalizedQuery.split(/\s+/).every((token) => tokenMatches(token, fields));
+    }
+
+    function selectedText(control: HTMLInputElement | HTMLSelectElement) {
+      if (control instanceof HTMLSelectElement) {
+        return control.selectedOptions[0]?.textContent?.replace(/\s+\(\d+\)$/, '').trim() ?? control.value;
+      }
+
+      return control.value;
+    }
+
+    function getValues() {
+      const values: Record<string, string> = {};
+      for (const control of controls) {
+        values[control.dataset.filter ?? ''] = control.value.trim();
+      }
+      return values;
+    }
+
+    function hasActiveFilters(values: Record<string, string>) {
+      return Object.values(values).some(Boolean);
+    }
+
+    function syncUrl(values: Record<string, string>) {
+      const persistentFilters = [
+        'category',
+        'year',
+        'publicationYear',
+        'bookAuthor',
+        'author',
+        'format',
+        'genre',
+        'tag',
+        'outcome',
+      ];
+      const params = new URLSearchParams();
+      for (const key of persistentFilters) {
+        const value = values[key];
+        if (value) params.set(key, value);
+      }
       const query = params.toString();
       history.replaceState(null, '', query ? `${location.pathname}?${query}` : location.pathname);
     }
 
-    function applyFilters() {
-      const values: Record<string, string> = {};
-      for (const control of controls) {
-        values[control.dataset.filter ?? ''] = normalize(control.value);
+    function getVisibleResultLinks() {
+      if (!resultsRegion) return [];
+      return [
+        ...resultsRegion.querySelectorAll<HTMLAnchorElement>('[data-post-card]:not([hidden]) .post-card-link'),
+      ];
+    }
+
+    function setDropdownVisibility(active: boolean) {
+      const visible = active && dropdownOpen;
+      if (resultsRegion) resultsRegion.hidden = !visible;
+      searchInput?.setAttribute('aria-expanded', String(visible));
+    }
+
+    function showDropdown() {
+      dropdownOpen = hasActiveFilters(getValues());
+      applyFilters();
+    }
+
+    function hideDropdown(returnFocus = false) {
+      dropdownOpen = false;
+      if (resultsRegion) resultsRegion.hidden = true;
+      searchInput?.setAttribute('aria-expanded', 'false');
+      if (returnFocus && searchInput) {
+        suppressNextFocusDropdown = true;
+        searchInput.focus();
       }
+    }
+
+    function focusResult(index: number) {
+      const links = getVisibleResultLinks();
+      if (links.length === 0) return false;
+      const target = links[(index + links.length) % links.length];
+      target.focus();
+      target.scrollIntoView({ block: 'nearest' });
+      return true;
+    }
+
+    function focusAdjacentResult(direction: 1 | -1) {
+      const links = getVisibleResultLinks();
+      if (links.length === 0) return false;
+      const activeIndex = document.activeElement instanceof HTMLAnchorElement ? links.indexOf(document.activeElement) : -1;
+      const nextIndex =
+        activeIndex === -1
+          ? direction === 1
+            ? 0
+            : links.length - 1
+          : (activeIndex + direction + links.length) % links.length;
+
+      return focusResult(nextIndex);
+    }
+
+    function clearFilter(name: string) {
+      const control = controls.find((item) => item.dataset.filter === name);
+      if (control) control.value = '';
+      dropdownOpen = hasActiveFilters(getValues());
+      applyFilters();
+      searchInput?.focus();
+    }
+
+    function renderActiveFilters(values: Record<string, string>) {
+      if (!activeFilters) return;
+
+      const active = controls.filter((control) => {
+        const name = control.dataset.filter ?? '';
+        return name !== 'q' && Boolean(values[name]);
+      });
+
+      activeFilters.hidden = active.length === 0;
+      activeFilters.replaceChildren();
+
+      for (const control of active) {
+        const name = control.dataset.filter ?? '';
+        const label = filterNames[name] ?? name;
+        const value = name === 'category' ? (categoryLabels[values[name]] ?? values[name]) : selectedText(control);
+        const chip = document.createElement('span');
+        const text = document.createElement('span');
+        const button = document.createElement('button');
+
+        chip.className = 'filter-chip';
+        text.textContent = `${label}: ${value}`;
+        button.type = 'button';
+        button.textContent = 'x';
+        button.dataset.clearFilter = name;
+        button.setAttribute('aria-label', `Clear ${label} filter`);
+        chip.append(text, button);
+        activeFilters.append(chip);
+      }
+    }
+
+    function applyFilters() {
+      const values = getValues();
+      const active = hasActiveFilters(values);
+      const normalizedValues = Object.fromEntries(
+        Object.entries(values).map(([key, value]) => [key, normalize(value)])
+      );
 
       let visible = 0;
 
       for (const card of cards) {
-        const search = card.dataset.search ?? '';
         const tags = (card.dataset.tags ?? '').split('|');
         const genres = (card.dataset.genres ?? '').split('|');
         const categories = (card.dataset.categories ?? '').split('|');
-        const haystackMatch = !values.q || search.includes(values.q);
+        const queryMatch = queryMatches(values.q ?? '', card.dataset.search ?? '');
         const yearMatch = !values.year || card.dataset.year === values.year;
-        const authorMatch = !values.author || normalize(card.dataset.author ?? '') === values.author;
-        const bookAuthorMatch = !values.bookAuthor || normalize(card.dataset.bookAuthor ?? '') === values.bookAuthor;
-        const formatMatch = !values.format || normalize(card.dataset.format ?? '') === values.format;
-        const outcomeMatch = !values.outcome || normalize(card.dataset.outcome ?? '') === values.outcome;
-        const tagMatch = !values.tag || tags.includes(values.tag);
-        const genreMatch = !values.genre || genres.includes(values.genre);
+        const publicationYearMatch =
+          !values.publicationYear || card.dataset.publicationYear === values.publicationYear;
+        const authorMatch = !values.author || normalize(card.dataset.author ?? '') === normalizedValues.author;
+        const bookAuthorMatch =
+          !values.bookAuthor || normalize(card.dataset.bookAuthor ?? '') === normalizedValues.bookAuthor;
+        const formatMatch = !values.format || normalize(card.dataset.format ?? '') === normalizedValues.format;
+        const outcomeMatch = !values.outcome || normalize(card.dataset.outcome ?? '') === normalizedValues.outcome;
+        const tagMatch = !values.tag || tags.includes(slugifyLike(values.tag));
+        const genreMatch = !values.genre || genres.includes(slugifyLike(values.genre));
         const categoryMatch = !values.category || categories.includes(values.category);
         const isVisible =
-          haystackMatch &&
+          active &&
+          queryMatch &&
           yearMatch &&
+          publicationYearMatch &&
           authorMatch &&
           bookAuthorMatch &&
           formatMatch &&
@@ -166,32 +422,157 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
         if (isVisible) visible += 1;
       }
 
-      if (count) count.textContent = String(visible);
-      if (empty) empty.hidden = visible !== 0;
-      if (activeCategory && activeCategoryLabel) {
-        const label = values.category ? (categoryLabels[values.category] ?? values.category) : '';
-        activeCategory.hidden = !label;
-        activeCategoryLabel.textContent = label;
+      setDropdownVisibility(active);
+      if (empty) empty.hidden = !active || visible !== 0;
+      if (resultsSummary) {
+        resultsSummary.textContent = active
+          ? `${visible} ${visible === 1 ? 'review' : 'reviews'}, newest first`
+          : '';
       }
+      if (resultsHeading) {
+        resultsHeading.textContent = values.category
+          ? `${categoryLabels[values.category] ?? 'Shelf'} reviews`
+          : 'Search results';
+      }
+      if (searchStatus) {
+        searchStatus.textContent =
+          'Search the archive by book, author, reading year, publication year, genre, tag, or review text.';
+      }
+
+      renderActiveFilters(values);
+      syncUrl(values);
 
       window.dispatchEvent(
         new CustomEvent('review-filters-changed', {
-          detail: { category: values.category },
+          detail: { category: values.category || null },
         })
       );
     }
 
-    controls.forEach((control) => control.addEventListener('input', applyFilters));
-    clearCategory?.addEventListener('click', () => {
-      if (categoryControl) categoryControl.value = '';
-      removeUrlParam('category');
-      applyFilters();
+    function slugifyLike(value: string) {
+      return normalize(value)
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    filterToggle?.addEventListener('click', () => {
+      const expanded = filterToggle.getAttribute('aria-expanded') === 'true';
+      filterToggle.setAttribute('aria-expanded', String(!expanded));
+      filterToggle.setAttribute('aria-label', expanded ? 'Show filters' : 'Hide filters');
+      if (filterPanel) filterPanel.hidden = expanded;
+      hideDropdown();
     });
-    reset?.addEventListener('click', () => {
-      controls.forEach((control) => {
-        control.value = '';
-      });
-      history.replaceState(null, '', location.pathname);
+
+    searchInput?.addEventListener('focus', () => {
+      if (suppressNextFocusDropdown) {
+        suppressNextFocusDropdown = false;
+        return;
+      }
+
+      if (hasActiveFilters(getValues())) showDropdown();
+    });
+
+    searchInput?.addEventListener('keydown', (event) => {
+      if (!['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) return;
+
+      const active = hasActiveFilters(getValues());
+      if (!active) return;
+      if (!dropdownOpen) {
+        dropdownOpen = true;
+        applyFilters();
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        focusResult(0);
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        focusResult(-1);
+      }
+
+      if (event.key === 'Enter') {
+        const links = getVisibleResultLinks();
+        if (links[0]) {
+          event.preventDefault();
+          links[0].click();
+        }
+      }
+    });
+
+    resultsRegion?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        focusAdjacentResult(1);
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        focusAdjacentResult(-1);
+      }
+
+      if (event.key === 'Home') {
+        event.preventDefault();
+        focusResult(0);
+      }
+
+      if (event.key === 'End') {
+        event.preventDefault();
+        focusResult(-1);
+      }
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        hideDropdown(true);
+      }
+    });
+
+    browser.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const clear = target.closest<HTMLButtonElement>('[data-clear-filter]');
+      if (clear?.dataset.clearFilter) clearFilter(clear.dataset.clearFilter);
+    });
+
+    browser.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (filterPanel && !filterPanel.hidden) {
+        filterPanel.hidden = true;
+        filterToggle?.setAttribute('aria-expanded', 'false');
+        filterToggle?.setAttribute('aria-label', 'Show filters');
+        filterToggle?.focus();
+        return;
+      }
+      if (dropdownOpen) hideDropdown();
+    });
+
+    controls.forEach((control) =>
+      control.addEventListener('input', () => {
+        dropdownOpen = hasActiveFilters(getValues());
+        applyFilters();
+      })
+    );
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!shell?.contains(target)) hideDropdown();
+    });
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const link = target.closest<HTMLAnchorElement>('a.category-card[href]');
+      if (!link) return;
+
+      const url = new URL(link.href);
+      const category = url.searchParams.get('category');
+      if (!category) return;
+
+      event.preventDefault();
+      const categoryControl = controls.find((control) => control.dataset.filter === 'category');
+      if (categoryControl) categoryControl.value = category;
+      dropdownOpen = true;
       applyFilters();
     });
 
@@ -200,6 +581,8 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
       const value = params.get(control.dataset.filter ?? '');
       if (value !== null) control.value = value;
     }
+
+    dropdownOpen = hasActiveFilters(getValues());
     applyFilters();
   }
 </script>

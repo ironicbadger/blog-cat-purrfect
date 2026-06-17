@@ -1,5 +1,8 @@
 ---
+import { getCollection } from 'astro:content';
+import FilteredPostList from '@/components/FilteredPostList.astro';
 import { SITE, navItems } from '@/lib/site';
+import { isPublished, sortPosts } from '@/lib/posts';
 import '@/styles/global.css';
 
 interface Props {
@@ -16,6 +19,7 @@ const {
 
 const pageTitle = title === SITE.title ? SITE.title : `${title} | ${SITE.title}`;
 const canonical = new URL(Astro.url.pathname, SITE.url);
+const searchPosts = sortPosts((await getCollection('posts')).filter(isPublished));
 ---
 
 <!doctype html>
@@ -47,6 +51,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url);
             <small>book notes and reviews</small>
           </span>
         </a>
+        <FilteredPostList posts={searchPosts} variant="header" />
         <nav class="site-nav" aria-label="Primary navigation">
           {
             navItems.map((item) => (
