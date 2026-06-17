@@ -20,6 +20,12 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
 
 <section class="review-browser" data-review-browser>
   <div class="filter-panel" aria-label="Review filters">
+    <div class="filter-stats" aria-label="Archive stats">
+      <span><strong>{posts.length}</strong> reviews</span>
+      <span><strong>{years.length}</strong> years</span>
+      <span><strong>{tags.length}</strong> tags</span>
+    </div>
+
     <label class="search-field">
       <span>Search reviews</span>
       <input data-filter="q" type="search" placeholder="Title, author, tag, review text..." autocomplete="off" />
@@ -27,7 +33,6 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
     </label>
 
     <div class="active-filter-summary" data-active-category hidden>
-      <span>Active shelf</span>
       <strong data-active-category-label></strong>
       <button type="button" data-clear-category aria-label="Clear shelf filter">x</button>
     </div>

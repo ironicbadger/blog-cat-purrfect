@@ -3,32 +3,14 @@ import { getCollection } from 'astro:content';
 import CategoryShowcase from '@/components/CategoryShowcase.astro';
 import FilteredPostList from '@/components/FilteredPostList.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { isPublished, sortPosts, uniqueValues } from '@/lib/posts';
+import { isPublished, sortPosts } from '@/lib/posts';
 import { SITE } from '@/lib/site';
 
 const posts = sortPosts((await getCollection('posts')).filter(isPublished));
-const years = uniqueValues(posts, (post) => String(post.data.pubDate.getUTCFullYear()));
-const tags = uniqueValues(posts, (post) => post.data.tags);
 ---
 
 <BaseLayout title={SITE.title} description={SITE.description}>
+  <h1 class="visually-hidden">PurrfectProse</h1>
   <CategoryShowcase posts={posts} />
-
-  <section class="intro-section">
-    <div class="intro-copy">
-      <p class="eyebrow">Markdown-powered book reviews</p>
-      <h1>PurrfectProse</h1>
-      <p>
-        Catherine's searchable archive of book reviews, audiobooks, monthly themes,
-        and Reading with Ella notes.
-      </p>
-    </div>
-    <div class="intro-stats" aria-label="Archive stats">
-      <span><strong>{posts.length}</strong> reviews</span>
-      <span><strong>{years.length}</strong> years</span>
-      <span><strong>{tags.length}</strong> tags</span>
-    </div>
-  </section>
-
   <FilteredPostList posts={posts} />
 </BaseLayout>

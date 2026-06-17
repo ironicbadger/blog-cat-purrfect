@@ -165,7 +165,6 @@ const graphData = {
 <BaseLayout title="Grid" description="A visual map of PurrfectProse reviews, lists, tags, authors, and reading years.">
   <section class="grid-page" data-knowledge-grid>
     <div class="grid-heading">
-      <p class="eyebrow">Reading map</p>
       <h1>Grid</h1>
     </div>
 
@@ -190,7 +189,6 @@ const graphData = {
       </div>
 
       <aside class="grid-inspector" data-grid-inspector aria-live="polite">
-        <p class="eyebrow" data-grid-kind>Selected</p>
         <h2 data-grid-title>List of lists</h2>
         <p data-grid-meta></p>
         <p data-grid-description></p>
@@ -212,7 +210,6 @@ const graphData = {
     const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-grid-mode]')];
     const tooltip = root.querySelector<HTMLElement>('[data-grid-tooltip]');
     const inspector = root.querySelector<HTMLElement>('[data-grid-inspector]');
-    const kindEl = inspector?.querySelector<HTMLElement>('[data-grid-kind]');
     const titleEl = inspector?.querySelector<HTMLElement>('[data-grid-title]');
     const metaEl = inspector?.querySelector<HTMLElement>('[data-grid-meta]');
     const descriptionEl = inspector?.querySelector<HTMLElement>('[data-grid-description]');
@@ -223,6 +220,8 @@ const graphData = {
       const graph = JSON.parse(dataNode.textContent ?? '{"nodes":[],"links":[]}');
       const ctx = graphCanvas.getContext('2d');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const labelFontFamily =
+        'Futura, "Century Gothic", Avenir, "Avenir Next", "Trebuchet MS", Arial, sans-serif';
       const colors: Record<string, string> = {
         post: '#28666e',
         list: '#d94747',
@@ -339,7 +338,6 @@ const graphData = {
 
       function updateInspector(node: any) {
         if (!node) return;
-        if (kindEl) kindEl.textContent = node.kind;
         if (titleEl) titleEl.textContent = node.label;
         if (metaEl) {
           metaEl.textContent = node.meta || `${node.degree} links`;
@@ -448,7 +446,10 @@ const graphData = {
           ctx.stroke();
 
           if (node.featured || isSelected || isHovered || node.kind === 'category') {
-            ctx.font = node.featured || isSelected ? '700 13px system-ui' : '700 11px system-ui';
+            ctx.font =
+              node.featured || isSelected
+                ? `700 13px ${labelFontFamily}`
+                : `700 11px ${labelFontFamily}`;
             ctx.textAlign = 'center';
             ctx.fillStyle = '#242120';
             ctx.fillText(node.label.slice(0, 26), node.x, node.y - node.radius - 8);

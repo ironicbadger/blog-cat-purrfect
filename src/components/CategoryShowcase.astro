@@ -1,7 +1,6 @@
 ---
 import type { CategoryId, Post } from '@/lib/posts';
 import {
-  categoryCount,
   categoryDefinitions,
   excerptFor,
   postCategories,
@@ -55,19 +54,14 @@ const randomReviews = posts
     publicationYear: post.data.publicationYear ?? 'TBC',
     readingYear: post.data.pubDate.getUTCFullYear(),
     cover: post.data.cover,
-    excerpt: excerptFor(post, 220),
+    excerpt: excerptFor(post, 264),
     url: postUrl(post),
   }));
 
 const fallbackReview = randomReviews[0];
 ---
 
-<section class="category-showcase" aria-labelledby="category-heading">
-  <div class="category-heading">
-    <p class="eyebrow">What to read next</p>
-    <h1 id="category-heading">Choose a shelf</h1>
-  </div>
-
+<section class="category-showcase" aria-label="Review categories">
   <div class="category-grid">
     {
       categoryDefinitions.map((category) => (
@@ -86,7 +80,6 @@ const fallbackReview = randomReviews[0];
             </div>
           </div>
           <div class="category-copy">
-            <span>{categoryCount(posts, category.id)} reviews</span>
             <h2>{category.label}</h2>
             <p>{category.description}</p>
           </div>
@@ -102,8 +95,7 @@ const fallbackReview = randomReviews[0];
           <img src={fallbackReview.cover} alt="" loading="lazy" data-random-cover />
         </div>
         <div class="random-review-copy">
-          <div class="random-review-top">
-            <p class="eyebrow">Review roulette</p>
+          <div class="random-review-actions">
             <div class="random-review-facts" aria-label="Book details">
               <p>
                 <span>Author</span>
@@ -118,10 +110,10 @@ const fallbackReview = randomReviews[0];
                 <strong data-random-reading-year>{fallbackReview.readingYear}</strong>
               </p>
             </div>
+            <a class="review-link" href={fallbackReview.url} data-random-link>Read review</a>
           </div>
           <h2 id="random-review-heading" data-random-title>{fallbackReview.title}</h2>
           <p class="random-review-excerpt" data-random-excerpt>{fallbackReview.excerpt}</p>
-          <a class="review-link" href={fallbackReview.url} data-random-link>Read review</a>
         </div>
         <script is:inline type="application/json" data-random-review-data set:html={JSON.stringify(randomReviews)} />
       </section>

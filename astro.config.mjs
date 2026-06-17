@@ -9,4 +9,9 @@ export default defineConfig({
       theme: 'github-light',
     },
   },
+  vite: {
+    server: {
+      allowedHosts: ['beefcake.ktz.ts.net'],
+    },
+  },
 });

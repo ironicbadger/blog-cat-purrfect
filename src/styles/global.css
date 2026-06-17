@@ -13,9 +13,10 @@
   --shadow: 0 18px 45px rgb(50 39 32 / 9%);
   --radius: 8px;
   --max: 1120px;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  --font-body:
+    Futura, "Century Gothic", Avenir, "Avenir Next", "Trebuchet MS", Arial,
     sans-serif;
+  font-family: var(--font-body);
 }
 
 * {
@@ -77,6 +78,16 @@ button {
   transform: translateY(0);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .site-header {
   border-bottom: 1px solid var(--line);
   background: rgb(251 250 247 / 92%);
@@ -90,7 +101,6 @@ button {
 .site-footer,
 .category-showcase,
 .grid-page,
-.intro-section,
 .review-browser,
 .page-heading,
 .archive-list,
@@ -174,19 +184,6 @@ main {
   padding-block: 0.5rem 2.3rem;
 }
 
-.category-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.category-heading h1 {
-  font-size: clamp(2rem, 4vw, 3.6rem);
-  max-width: none;
-}
-
 .category-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -229,11 +226,12 @@ main {
 .category-art::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -64px;
   background-image:
     linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px),
     linear-gradient(0deg, rgb(255 255 255 / 6%) 1px, transparent 1px);
   background-size: 92px 92px;
+  transform: rotate(-12deg);
 }
 
 .category-card-reading-with-ella .category-art {
@@ -263,16 +261,19 @@ main {
   top: 50%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-width: 760px;
-  transform: translate(-50%, -50%);
+  gap: 18px;
+  min-width: 960px;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  transform-origin: center;
 }
 
 .cover-row {
   --drift-from: -34px;
   --drift-to: 36px;
   display: flex;
-  gap: 11px;
+  align-items: center;
+  gap: 14px;
+  height: 88px;
   width: max-content;
   animation: cover-row-drift 42s ease-in-out infinite alternate;
   will-change: transform;
@@ -296,6 +297,8 @@ main {
   width: 54px;
   height: 82px;
   filter: drop-shadow(0 13px 12px rgb(0 0 0 / 28%));
+  transform: rotate(-5deg);
+  transform-origin: center;
 }
 
 .cover-tile img {
@@ -334,13 +337,6 @@ main {
   padding: 1rem;
 }
 
-.category-copy span {
-  color: var(--accent-dark);
-  font-size: 0.8rem;
-  font-weight: 850;
-  text-transform: uppercase;
-}
-
 .category-copy h2 {
   font-size: clamp(1.35rem, 2vw, 1.85rem);
 }
@@ -352,17 +348,17 @@ main {
 }
 
 .random-review {
+  --roulette-cover-height: 220px;
+  --roulette-cover-width: 156px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(130px, 180px) minmax(0, 1fr);
   gap: 1.1rem;
-  align-items: center;
+  align-items: start;
   margin-top: 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background:
-    radial-gradient(circle at 92% 12%, rgb(255 220 112 / 22%) 0 58px, transparent 59px),
-    linear-gradient(135deg, #ffffff 0%, #f7fbfa 52%, #fff6ee 100%);
+  background: var(--surface);
   box-shadow: var(--shadow);
   overflow: hidden;
   padding: 1rem;
@@ -375,14 +371,15 @@ main {
 .random-review-media {
   display: grid;
   place-items: center;
-  align-self: center;
+  align-self: start;
+  width: min(var(--roulette-cover-width), 100%);
+  min-height: var(--roulette-cover-height);
 }
 
 .random-review-media img {
   width: auto;
-  height: auto;
-  max-width: min(156px, 100%);
-  max-height: 220px;
+  height: var(--roulette-cover-height);
+  max-width: 100%;
   object-fit: contain;
   border-radius: 5px;
   box-shadow:
@@ -393,7 +390,8 @@ main {
 .random-review-copy {
   display: grid;
   gap: 0.65rem;
-  align-content: center;
+  align-content: start;
+  align-self: start;
   min-width: 0;
 }
 
@@ -402,23 +400,30 @@ main {
   max-width: 20ch;
 }
 
-.random-review-top {
-  display: block;
-}
-
-.random-review-top .eyebrow {
-  margin-bottom: 0;
-}
-
-.random-review-facts {
+.random-review-actions {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+  max-width: min(62%, 620px);
+  min-width: 0;
+}
+
+.random-review-actions .review-link {
+  min-height: 28px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  padding: 0.4rem 0.65rem;
+  white-space: nowrap;
+}
+
+.random-review-facts {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.5rem;
-  max-width: min(62%, 620px);
   min-width: 0;
 }
 
@@ -452,7 +457,7 @@ main {
 .random-review-excerpt {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   overflow: hidden;
   color: var(--muted);
   line-height: 1.55;
@@ -605,26 +610,6 @@ main {
   line-height: 1.55;
 }
 
-.intro-section {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 1.5rem;
-  padding-block: 1rem 2rem;
-}
-
-.intro-copy {
-  max-width: 720px;
-}
-
-.eyebrow {
-  color: var(--accent-dark);
-  font-size: 0.82rem;
-  font-weight: 800;
-  margin: 0 0 0.55rem;
-  text-transform: uppercase;
-}
-
 h1,
 h2,
 h3 {
@@ -637,35 +622,12 @@ h1 {
   max-width: 12ch;
 }
 
-.intro-copy p:last-child,
 .page-heading p:last-child {
   color: var(--muted);
   font-size: 1.08rem;
   line-height: 1.65;
   margin: 1rem 0 0;
   max-width: 64ch;
-}
-
-.intro-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(86px, 1fr));
-  gap: 0.6rem;
-  min-width: 310px;
-}
-
-.intro-stats span {
-  border: 1px solid var(--line);
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 0.85rem;
-  color: var(--muted);
-  min-height: 74px;
-}
-
-.intro-stats strong {
-  display: block;
-  color: var(--teal);
-  font-size: 1.55rem;
 }
 
 .review-browser {
@@ -685,6 +647,34 @@ h1 {
   padding: 1rem;
 }
 
+.filter-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+}
+
+.filter-stats span {
+  display: grid;
+  gap: 0.08rem;
+  align-content: center;
+  min-height: 56px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.15;
+  padding: 0.55rem 0.5rem;
+}
+
+.filter-stats strong {
+  display: block;
+  color: var(--teal);
+  font-size: 1.12rem;
+  line-height: 1;
+}
+
 .filter-panel label,
 .search-field {
   display: grid;
@@ -695,6 +685,12 @@ h1 {
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 750;
+}
+
+.filter-panel .filter-stats span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 500;
 }
 
 .filter-panel input,
@@ -727,14 +723,6 @@ h1 {
 
 .active-filter-summary[hidden] {
   display: none;
-}
-
-.active-filter-summary span {
-  grid-column: 1 / -1;
-  color: var(--accent-dark);
-  font-size: 0.72rem;
-  font-weight: 850;
-  text-transform: uppercase;
 }
 
 .active-filter-summary strong {
@@ -1023,6 +1011,16 @@ h1 {
 .post-hero h1 {
   max-width: 18ch;
   font-size: clamp(2.2rem, 5vw, 4.2rem);
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 650;
+  margin: 0 0 0.7rem;
 }
 
 .post-hero-cover {
@@ -1357,16 +1355,10 @@ h1 {
 }
 
 @media (max-width: 900px) {
-  .intro-section,
   .review-browser,
   .post-body-grid,
   .post-hero {
     grid-template-columns: 1fr;
-  }
-
-  .intro-stats {
-    min-width: 0;
-    width: 100%;
   }
 
   .category-grid {
@@ -1417,11 +1409,9 @@ h1 {
   }
 
   .random-review {
+    --roulette-cover-height: 180px;
+    --roulette-cover-width: 128px;
     grid-template-columns: 170px minmax(0, 1fr);
-  }
-
-  .random-review-media img {
-    max-height: 180px;
   }
 
   .challenge-table thead {
@@ -1491,10 +1481,6 @@ h1 {
     font-size: 2.35rem;
   }
 
-  .category-heading {
-    display: block;
-  }
-
   .grid-heading {
     display: block;
   }
@@ -1546,12 +1532,8 @@ h1 {
     justify-items: start;
   }
 
-  .random-review-facts {
+  .random-review-actions {
     max-width: calc(100% - 10.25rem);
-  }
-
-  .intro-stats {
-    grid-template-columns: 1fr;
   }
 
   .filter-grid,
