@@ -8,6 +8,7 @@ description: >-
   crime writing as he counts how m
 pubDate: '2025-11-30T14:32:38.000Z'
 updatedDate: '2025-11-30T14:32:38.000Z'
+dateFinished: 2025-09-03
 author: Catherine K
 tags:
   - Australia

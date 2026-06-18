@@ -8,6 +8,7 @@ description: >-
   90's. Ella loved it. She has 
 pubDate: '2025-09-06T15:46:58.000Z'
 updatedDate: '2025-09-06T15:46:58.000Z'
+dateFinished: 2025-08-02
 author: Catherine K
 tags:
   - '2025'

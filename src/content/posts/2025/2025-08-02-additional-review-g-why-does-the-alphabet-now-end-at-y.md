@@ -8,6 +8,7 @@ description: >-
   found was an original hardback
 pubDate: '2025-08-02T14:52:28.000Z'
 updatedDate: '2025-08-02T14:52:28.000Z'
+dateFinished: 2025-06-07
 author: Catherine K
 tags:
   - '2025'

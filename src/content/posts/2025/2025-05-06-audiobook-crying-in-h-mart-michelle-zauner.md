@@ -8,6 +8,7 @@ description: >-
   just kept annoying me. She sound
 pubDate: '2025-05-06T15:24:48.000Z'
 updatedDate: '2025-05-06T15:24:48.000Z'
+dateFinished: 2025-05-06
 author: Catherine K
 tags:
   - '2025'

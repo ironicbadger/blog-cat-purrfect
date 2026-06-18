@@ -8,6 +8,7 @@ description: >-
   unremarkable, but I'm low-ke
 pubDate: '2025-12-08T16:15:19.000Z'
 updatedDate: '2025-12-08T16:15:19.000Z'
+dateFinished: 2025-10-15
 author: Catherine K
 tags:
   - America

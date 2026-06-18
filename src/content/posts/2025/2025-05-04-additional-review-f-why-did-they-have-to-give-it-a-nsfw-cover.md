@@ -8,6 +8,7 @@ description: >-
   with me to read while my d
 pubDate: '2025-05-04T14:34:28.000Z'
 updatedDate: '2025-05-04T14:34:28.000Z'
+dateFinished: 2025-05-03
 author: Catherine K
 tags:
   - '2025'

@@ -8,6 +8,7 @@ description: >-
   go back to read some oth
 pubDate: '2025-10-28T19:51:07.000Z'
 updatedDate: '2025-10-28T19:55:55.000Z'
+dateFinished: 2025-08-02
 author: Catherine K
 tags:
   - '2025'

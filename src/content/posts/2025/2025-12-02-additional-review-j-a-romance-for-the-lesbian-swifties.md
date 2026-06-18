@@ -8,6 +8,7 @@ description: >-
   scenes were super hot and th
 pubDate: '2025-12-02T21:24:55.000Z'
 updatedDate: '2025-12-02T21:24:55.000Z'
+dateFinished: 2025-11-10
 author: Catherine K
 tags:
   - ARC

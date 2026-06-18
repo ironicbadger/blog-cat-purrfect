@@ -8,6 +8,7 @@ description: >-
   the movie coming soon and I
 pubDate: '2025-09-04T20:11:55.000Z'
 updatedDate: '2025-09-04T20:11:55.000Z'
+dateFinished: 2025-07-31
 author: Catherine K
 tags:
   - '2025'

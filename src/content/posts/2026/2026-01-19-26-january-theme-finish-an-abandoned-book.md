@@ -8,6 +8,7 @@ description: >-
   London around 10 years ago. A t
 pubDate: '2026-01-19T22:57:11.000Z'
 updatedDate: '2026-01-19T22:57:11.000Z'
+dateFinished: 2026-01-03
 author: Catherine K
 tags:
   - London

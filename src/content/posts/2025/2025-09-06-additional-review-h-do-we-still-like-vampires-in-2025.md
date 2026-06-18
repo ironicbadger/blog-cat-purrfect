@@ -8,6 +8,7 @@ description: >-
   box I couldn't resist. I mad
 pubDate: '2025-09-06T16:04:23.000Z'
 updatedDate: '2025-09-06T16:04:23.000Z'
+dateFinished: 2025-08-10
 author: Catherine K
 tags:
   - '2025'

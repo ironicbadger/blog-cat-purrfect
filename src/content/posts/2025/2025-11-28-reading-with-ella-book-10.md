@@ -8,6 +8,7 @@ description: >-
   say - I loved that book. I l
 pubDate: '2025-11-28T15:16:24.000Z'
 updatedDate: '2025-11-28T15:16:24.000Z'
+dateFinished: 2025-08-10
 author: Catherine K
 tags:
   - Ella

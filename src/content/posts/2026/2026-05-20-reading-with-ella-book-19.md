@@ -8,6 +8,7 @@ description: >-
   scary for a 4 year old. Perfec
 pubDate: '2026-05-20T00:55:22.000Z'
 updatedDate: '2026-05-20T00:55:22.000Z'
+dateFinished: 2025-11-15
 author: Catherine K
 tags:
   - Children's

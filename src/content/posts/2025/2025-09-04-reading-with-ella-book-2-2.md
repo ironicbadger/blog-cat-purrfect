@@ -8,6 +8,7 @@ description: >-
   Ella's books as we read them a 
 pubDate: '2025-09-04T20:32:52.000Z'
 updatedDate: '2025-09-04T20:32:52.000Z'
+dateFinished: 2025-08-02
 author: Catherine K
 tags:
   - '2025'

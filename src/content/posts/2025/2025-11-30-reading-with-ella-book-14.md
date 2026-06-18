@@ -8,6 +8,7 @@ description: >-
   illustrations were adorab
 pubDate: '2025-11-30T15:24:05.000Z'
 updatedDate: '2025-11-30T15:24:05.000Z'
+dateFinished: 2025-11-30
 author: Catherine K
 tags:
   - BakeOff

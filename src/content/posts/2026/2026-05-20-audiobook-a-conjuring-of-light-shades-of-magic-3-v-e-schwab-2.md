@@ -8,6 +8,7 @@ description: >-
   duo. Not fully received p
 pubDate: '2026-05-20T17:42:52.000Z'
 updatedDate: '2026-05-20T17:42:52.000Z'
+dateFinished: 2025-12-12
 author: Catherine K
 tags:
   - 1920's

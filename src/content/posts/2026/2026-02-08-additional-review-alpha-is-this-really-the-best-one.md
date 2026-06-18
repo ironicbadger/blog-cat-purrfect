@@ -8,6 +8,7 @@ description: >-
   one after another until 't
 pubDate: '2026-02-08T14:59:41.000Z'
 updatedDate: '2026-02-08T14:59:41.000Z'
+dateFinished: 2026-01-08
 author: Catherine K
 tags:
   - '2026'

@@ -8,6 +8,7 @@ description: >-
   where she ended up with a woman but no su
 pubDate: '2025-04-01T15:24:31.000Z'
 updatedDate: '2025-04-01T15:24:31.000Z'
+dateFinished: 2025-03-28
 author: Catherine K
 tags:
   - '2025'

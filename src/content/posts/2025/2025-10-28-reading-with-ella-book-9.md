@@ -8,6 +8,7 @@ description: >-
   them as they are just badly 
 pubDate: '2025-10-28T19:59:03.000Z'
 updatedDate: '2025-10-28T19:59:03.000Z'
+dateFinished: 2025-08-10
 author: Catherine K
 tags:
   - '2025'

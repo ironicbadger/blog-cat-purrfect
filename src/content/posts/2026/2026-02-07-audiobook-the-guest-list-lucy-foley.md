@@ -8,6 +8,7 @@ description: >-
   announce that I mislead s
 pubDate: '2026-02-07T14:10:00.000Z'
 updatedDate: '2026-02-07T14:10:00.000Z'
+dateFinished: 2025-10-08
 author: Catherine K
 tags:
   - '2025'

@@ -8,6 +8,7 @@ description: >-
   book revolves around a member of
 pubDate: '2025-08-02T15:27:55.000Z'
 updatedDate: '2025-08-02T15:35:55.000Z'
+dateFinished: 2025-06-09
 author: Catherine K
 tags:
   - '2025'

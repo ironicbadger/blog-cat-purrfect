@@ -8,6 +8,7 @@ description: >-
   music course, after it was loaned 
 pubDate: '2024-11-08T15:29:00.000Z'
 updatedDate: '2024-11-08T15:29:49.000Z'
+dateFinished: 2024-10-27
 author: Catherine K
 tags:
   - '2024'

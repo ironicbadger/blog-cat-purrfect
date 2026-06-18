@@ -8,6 +8,7 @@ description: >-
   tight fist all the way through.
 pubDate: '2026-04-05T21:28:57.000Z'
 updatedDate: '2026-04-05T21:30:15.000Z'
+dateFinished: 2025-11-10
 author: Catherine K
 tags:
   - '2025'

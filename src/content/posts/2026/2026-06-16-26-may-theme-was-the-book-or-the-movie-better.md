@@ -8,6 +8,7 @@ description: >-
   eventually die. No need for concern.
 pubDate: '2026-06-16T16:08:20.000Z'
 updatedDate: '2026-06-16T16:08:20.000Z'
+dateFinished: 2026-05-18
 author: Catherine K
 tags:
   - Adventure

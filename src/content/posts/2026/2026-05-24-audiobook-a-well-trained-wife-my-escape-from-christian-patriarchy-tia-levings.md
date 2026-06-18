@@ -8,6 +8,7 @@ description: >-
   'sixteen kids and counting'- lat
 pubDate: '2026-05-24T16:41:56.000Z'
 updatedDate: '2026-05-24T16:41:56.000Z'
+dateFinished: 2026-01-05
 author: Catherine K
 bookTitle: 'A Well-Trained Wife: My Escape from Christian Patriarchy'
 bookAuthor: Tia Levings

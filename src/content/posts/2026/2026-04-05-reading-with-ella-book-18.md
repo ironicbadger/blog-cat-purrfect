@@ -8,6 +8,7 @@ description: >-
   self. There are the usual Amel
 pubDate: '2026-04-05T20:59:30.000Z'
 updatedDate: '2026-05-20T00:39:20.000Z'
+dateFinished: 2025-10-28
 author: Catherine K
 tags:
   - '2025'

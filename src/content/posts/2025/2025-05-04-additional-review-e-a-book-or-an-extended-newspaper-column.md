@@ -8,6 +8,7 @@ description: >-
   when I received this book and 
 pubDate: '2025-05-04T14:18:02.000Z'
 updatedDate: '2025-05-04T14:18:02.000Z'
+dateFinished: 2025-04-27
 author: Catherine K
 tags:
   - '2025'

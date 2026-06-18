@@ -8,6 +8,7 @@ description: >-
   suggest my September theme, howev
 pubDate: '2025-10-18T14:50:43.000Z'
 updatedDate: '2025-10-18T14:50:43.000Z'
+dateFinished: 2025-09-30
 author: Catherine K
 tags:
   - '2025'

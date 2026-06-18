@@ -9,6 +9,8 @@
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check",
     "migrate:ghost": "node scripts/migrate-ghost.mjs",
+    "sync:goodreads": "node scripts/sync-goodreads-finished-dates.mjs",
+    "sync:goodreads:dry": "node scripts/sync-goodreads-finished-dates.mjs --dry-run",
     "optimize:images": "node scripts/optimize-images.mjs",
     "validate:covers": "node scripts/validate-covers.mjs"
   },

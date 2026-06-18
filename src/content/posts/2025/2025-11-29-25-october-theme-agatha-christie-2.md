@@ -8,6 +8,7 @@ description: >-
   others. Her writing is witty, tight
 pubDate: '2025-11-29T16:02:55.000Z'
 updatedDate: '2026-01-04T23:11:38.000Z'
+dateFinished: 2025-11-28
 author: Catherine K
 tags:
   - '2025'

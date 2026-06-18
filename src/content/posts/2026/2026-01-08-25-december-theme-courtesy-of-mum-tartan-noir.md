@@ -8,6 +8,7 @@ description: >-
   the UK in winter with big cold 
 pubDate: '2026-01-08T23:36:08.000Z'
 updatedDate: '2026-01-08T23:36:08.000Z'
+dateFinished: 2025-12-31
 author: Catherine K
 tags:
   - '2025'

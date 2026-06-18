@@ -8,6 +8,7 @@ description: >-
   shelf for a while and was set in De
 pubDate: '2026-05-20T00:30:58.000Z'
 updatedDate: '2026-05-20T00:33:47.000Z'
+dateFinished: 2026-02-21
 author: Catherine K
 tags:
   - Georgia

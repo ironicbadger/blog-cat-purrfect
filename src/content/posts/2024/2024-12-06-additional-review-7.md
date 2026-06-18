@@ -8,6 +8,7 @@ description: >-
   one was pretty good too. Like so
 pubDate: '2024-12-06T03:19:07.000Z'
 updatedDate: '2024-12-10T15:55:04.000Z'
+dateFinished: 2024-12-04
 author: Catherine K
 tags:
   - '2024'

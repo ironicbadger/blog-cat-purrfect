@@ -8,6 +8,7 @@ description: >-
   read that. I should have had 
 pubDate: '2026-05-08T17:41:56.000Z'
 updatedDate: '2026-05-08T17:41:56.000Z'
+dateFinished: 2026-03-16
 author: Catherine K
 tags:
   - 1930's

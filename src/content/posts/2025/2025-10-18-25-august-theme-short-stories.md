@@ -8,6 +8,7 @@ description: >-
   fun read. The writing was 
 pubDate: '2025-10-18T14:14:10.000Z'
 updatedDate: '2025-10-18T14:14:10.000Z'
+dateFinished: 2025-08-24
 author: Catherine K
 tags:
   - '2025'

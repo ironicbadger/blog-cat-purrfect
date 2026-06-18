@@ -8,6 +8,7 @@ description: >-
   a Piorot or Marple to do th
 pubDate: '2025-10-22T18:37:15.000Z'
 updatedDate: '2025-10-22T18:37:15.000Z'
+dateFinished: 2025-10-22
 author: Catherine K
 tags:
   - 1930's

@@ -8,6 +8,7 @@ description: >-
   say she is too juvenile a
 pubDate: '2026-04-05T20:44:50.000Z'
 updatedDate: '2026-04-05T20:44:50.000Z'
+dateFinished: 2025-10-27
 author: Catherine K
 tags:
   - '2025'

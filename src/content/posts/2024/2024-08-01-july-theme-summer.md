@@ -8,6 +8,7 @@ description: >-
   of this book was neither fo
 pubDate: '2024-08-01T14:35:36.000Z'
 updatedDate: '2024-08-01T14:35:36.000Z'
+dateFinished: 2024-09-08
 author: Catherine K
 tags:
   - '2024'

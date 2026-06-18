@@ -8,6 +8,7 @@ description: >-
   fun and interesting and made 
 pubDate: '2024-10-24T14:45:35.000Z'
 updatedDate: '2024-10-24T14:45:35.000Z'
+dateFinished: 2024-10-09
 author: Catherine K
 tags:
   - '2024'

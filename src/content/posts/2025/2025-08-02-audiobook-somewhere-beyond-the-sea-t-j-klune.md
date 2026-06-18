@@ -8,6 +8,7 @@ description: >-
   magical beings as trans folk is n
 pubDate: '2025-08-02T17:13:49.000Z'
 updatedDate: '2025-08-02T17:14:14.000Z'
+dateFinished: 2025-07-18
 author: Catherine K
 tags:
   - '2025'

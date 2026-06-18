@@ -8,6 +8,7 @@ description: >-
   preschoolers craft morning 
 pubDate: '2024-05-31T14:45:13.000Z'
 updatedDate: '2024-05-31T15:26:21.000Z'
+dateFinished: 2024-06-09
 author: Catherine K
 tags:
   - '2024'

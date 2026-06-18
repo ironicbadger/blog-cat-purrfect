@@ -8,6 +8,7 @@ description: >-
   each was understandable in th
 pubDate: '2026-05-19T18:25:56.000Z'
 updatedDate: '2026-05-19T18:25:56.000Z'
+dateFinished: 2026-05-02
 author: Catherine K
 tags:
   - 1960's

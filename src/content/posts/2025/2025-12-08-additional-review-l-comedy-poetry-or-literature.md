@@ -8,6 +8,7 @@ description: >-
   pondering the meaning of life
 pubDate: '2025-12-08T15:54:51.000Z'
 updatedDate: '2025-12-08T15:54:51.000Z'
+dateFinished: 2025-11-25
 author: Catherine K
 tags:
   - America

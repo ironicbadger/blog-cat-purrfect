@@ -8,6 +8,7 @@ description: >-
   Unbeknownst to me when I started read
 pubDate: '2025-03-24T19:30:41.000Z'
 updatedDate: '2025-03-24T19:30:41.000Z'
+dateFinished: 2025-03-18
 author: Catherine K
 tags:
   - '2025'

@@ -8,6 +8,7 @@ description: >-
   Although this is a young ad
 pubDate: '2025-08-02T14:38:04.000Z'
 updatedDate: '2025-08-02T14:38:04.000Z'
+dateFinished: 2025-06-04
 author: Catherine K
 tags:
   - '2025'

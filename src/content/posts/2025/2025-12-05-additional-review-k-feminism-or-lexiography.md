@@ -8,6 +8,7 @@ description: >-
   'not like the other girls' type but
 pubDate: '2025-12-05T18:16:10.000Z'
 updatedDate: '2025-12-05T18:16:10.000Z'
+dateFinished: 2025-11-11
 author: Catherine K
 tags:
   - WW1

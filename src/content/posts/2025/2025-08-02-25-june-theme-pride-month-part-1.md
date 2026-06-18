@@ -8,6 +8,7 @@ description: >-
   detectives don't like him. Because he
 pubDate: '2025-08-02T15:09:02.000Z'
 updatedDate: '2025-08-02T15:10:56.000Z'
+dateFinished: 2025-06-29
 author: Catherine K
 tags:
   - '2025'

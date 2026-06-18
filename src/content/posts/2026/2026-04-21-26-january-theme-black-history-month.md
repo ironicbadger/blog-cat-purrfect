@@ -8,6 +8,7 @@ description: >-
   picked this for Black Histor
 pubDate: '2026-04-21T15:34:46.000Z'
 updatedDate: '2026-04-21T15:39:33.000Z'
+dateFinished: 2026-02-22
 author: Catherine K
 tags:
   - America

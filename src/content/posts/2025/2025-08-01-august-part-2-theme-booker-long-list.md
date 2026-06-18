@@ -8,6 +8,7 @@ description: >-
   it difficult to get through. 
 pubDate: '2025-08-01T21:03:22.000Z'
 updatedDate: '2025-08-01T21:03:22.000Z'
+dateFinished: 2025-06-03
 author: Catherine K
 tags:
   - '2024'

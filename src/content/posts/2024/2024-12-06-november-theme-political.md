@@ -8,6 +8,7 @@ description: >-
   would not have made it past page 6. 
 pubDate: '2024-12-06T03:01:22.000Z'
 updatedDate: '2024-12-10T15:54:51.000Z'
+dateFinished: 2024-11-17
 author: Catherine K
 tags:
   - '2024'

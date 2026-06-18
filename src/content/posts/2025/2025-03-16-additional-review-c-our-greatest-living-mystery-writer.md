@@ -8,6 +8,7 @@ description: >-
   Liane Moriarty. How about the girl on
 pubDate: '2025-03-16T13:15:45.000Z'
 updatedDate: '2025-03-16T13:15:45.000Z'
+dateFinished: 2025-03-15
 author: Catherine K
 tags:
   - '2025'

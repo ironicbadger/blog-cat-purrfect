@@ -8,6 +8,7 @@ description: >-
   100 years ago, and looked at pi
 pubDate: '2025-11-28T15:30:41.000Z'
 updatedDate: '2025-11-29T16:10:52.000Z'
+dateFinished: 2025-11-28
 author: Catherine K
 tags:
   - Children's

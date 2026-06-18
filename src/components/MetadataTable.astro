@@ -1,5 +1,6 @@
 ---
 import type { Post } from '@/lib/posts';
+import { formatDate } from '@/lib/posts';
 
 interface Props {
   post: Post;
@@ -10,6 +11,7 @@ const rows = [
   ['Book', post.data.bookTitle],
   ['Book author', post.data.bookAuthor],
   ['Published', post.data.publicationYear ? String(post.data.publicationYear) : undefined],
+  ['Finished', post.data.dateFinished ? formatDate(post.data.dateFinished) : undefined],
   ['Format', post.data.format],
   ['Outcome', post.data.outcome],
   ['Rating', post.data.rating ? String(post.data.rating) : undefined],
