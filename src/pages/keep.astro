@@ -1,14 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { formatDate, getYearGroups, isBrowsablePost, postUrl, sortPosts } from '@/lib/posts';
+import { getShelfGroups, isBrowsablePost, postUrl, shelfDateLabel, sortPosts } from '@/lib/posts';
 
 const posts = sortPosts(
   (await getCollection('posts')).filter(
     (post) => isBrowsablePost(post) && post.data.tags.some((tag) => tag.trim().toUpperCase() === 'KEEP')
   )
 );
-const groups = getYearGroups(posts);
+const groups = getShelfGroups(posts);
 ---
 
 <BaseLayout title="Keep" description="A visual shelf of every PurrfectProse book tagged KEEP.">
@@ -22,14 +22,14 @@ const groups = getYearGroups(posts);
 
   <div class="bookshelf-list">
     {
-      groups.map(([year, yearPosts]) => (
-        <section class="bookshelf-year" aria-labelledby={`keep-${year}`}>
+      groups.map((group) => (
+        <section class="bookshelf-year" aria-labelledby={`keep-${group.id}`}>
           <div class="bookshelf-year-label">
-            <h2 id={`keep-${year}`}>{year}</h2>
-            <span>{yearPosts.length} {yearPosts.length === 1 ? 'book' : 'books'}</span>
+            <h2 id={`keep-${group.id}`}>{group.label}</h2>
+            <span>{group.posts.length} {group.posts.length === 1 ? 'book' : 'books'}</span>
           </div>
           <div class="bookshelf-grid">
-            {yearPosts.map((post) => {
+            {group.posts.map((post) => {
               const title = post.data.bookTitle ?? post.data.title;
               const context = post.data.bookTitle ? post.data.title : undefined;
               const initial = title.trim().charAt(0) || 'P';
@@ -47,7 +47,7 @@ const groups = getYearGroups(posts);
                       }
                     </div>
                     <div class="bookshelf-card-copy">
-                      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                      <time datetime={post.data.pubDate.toISOString()}>{shelfDateLabel(post)}</time>
                       <h3>{title}</h3>
                       {post.data.bookAuthor && <p class="book-line">by {post.data.bookAuthor}</p>}
                       {context && <p>{context}</p>}

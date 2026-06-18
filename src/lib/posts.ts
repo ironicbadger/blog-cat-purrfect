@@ -108,6 +108,39 @@ export function getYearGroups(posts: Post[]) {
   return [...groups.entries()].sort(([a], [b]) => b - a);
 }
 
+export type ShelfGroup = {
+  id: string;
+  label: string;
+  posts: Post[];
+};
+
+export function shelfEraLabel(post: Post) {
+  const eraTag = post.data.tags.find((tag) => /^pre-\d{4}$/.test(slugifyTag(tag)));
+  if (!eraTag) return undefined;
+
+  const [, year] = slugifyTag(eraTag).match(/^pre-(\d{4})$/) ?? [];
+  return year ? `Pre-${year}` : undefined;
+}
+
+export function shelfDateLabel(post: Post) {
+  return shelfEraLabel(post) ?? formatDate(post.data.pubDate);
+}
+
+export function getShelfGroups(posts: Post[]): ShelfGroup[] {
+  const groups = new Map<string, ShelfGroup>();
+
+  for (const post of sortPosts(posts)) {
+    const era = shelfEraLabel(post);
+    const id = era ? slugifyTag(era) : String(post.data.pubDate.getUTCFullYear());
+    const label = era ?? String(post.data.pubDate.getUTCFullYear());
+    const current = groups.get(id) ?? { id, label, posts: [] };
+    current.posts.push(post);
+    groups.set(id, current);
+  }
+
+  return [...groups.values()];
+}
+
 export function isAnnualListPost(post: Post) {
   return isListPost(post) && (post.data.slug === 'the-list' || /^the-list-\d{4}$/.test(post.data.slug));
 }
