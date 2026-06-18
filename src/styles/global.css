@@ -1928,6 +1928,10 @@ h1 {
 }
 
 @media (max-width: 640px) {
+  .site-header {
+    position: static;
+  }
+
   .header-inner {
     grid-template-areas:
       "brand"
