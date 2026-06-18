@@ -64,7 +64,7 @@ const fallbackReview = randomReviews[0];
 
 <section class="category-showcase" aria-labelledby="category-heading">
   <div class="category-heading">
-    <p class="eyebrow">What to read next</p>
+    <p class="eyebrow">{posts.length} review total</p>
     <h1 id="category-heading">Choose a shelf</h1>
   </div>
 
@@ -78,7 +78,7 @@ const fallbackReview = randomReviews[0];
                 <div class="cover-row">
                   {row.map((cover) => (
                     <span class="cover-tile">
-                      <img src={cover.src} alt="" loading="lazy" />
+                      <img src={cover.src} alt="" loading="lazy" decoding="async" />
                     </span>
                   ))}
                 </div>
@@ -99,7 +99,7 @@ const fallbackReview = randomReviews[0];
     fallbackReview && (
       <section class="random-review" aria-labelledby="random-review-heading" data-random-review>
         <div class="random-review-media">
-          <img src={fallbackReview.cover} alt="" loading="lazy" data-random-cover />
+          <img src={fallbackReview.cover} alt="" loading="lazy" decoding="async" data-random-cover />
         </div>
         <div class="random-review-copy">
           <div class="random-review-top">

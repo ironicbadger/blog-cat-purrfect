@@ -1,8 +1,8 @@
 import { getCollection } from 'astro:content';
-import { excerptFor, isPublished, postUrl, sortPosts } from '@/lib/posts';
+import { excerptFor, isBrowsablePost, postUrl, sortPosts } from '@/lib/posts';
 
 export async function GET() {
-  const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+  const posts = sortPosts((await getCollection('posts')).filter(isBrowsablePost));
 
   return new Response(
     JSON.stringify(

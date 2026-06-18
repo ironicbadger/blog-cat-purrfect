@@ -5,7 +5,7 @@ import {
   categoryDefinitions,
   excerptFor,
   formatDate,
-  isPublished,
+  isBrowsablePost,
   postCategories,
   postUrl,
   readingWithEllaNumber,
@@ -33,7 +33,7 @@ type GraphLink = {
   kind: string;
 };
 
-const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+const posts = sortPosts((await getCollection('posts')).filter(isBrowsablePost));
 const nodes = new Map<string, GraphNode>();
 const links: GraphLink[] = [];
 const seenLinks = new Set<string>();
@@ -64,13 +64,6 @@ function addFacet(kind: Exclude<GraphKind, 'post' | 'list'>, label: string, href
   return id;
 }
 
-function graphKindForPost(post: (typeof posts)[number]): GraphKind {
-  const tags = post.data.tags.map((tag) => slugifyTag(tag));
-  const title = post.data.title.toLowerCase();
-  if (tags.includes('list') || title.includes('list')) return 'list';
-  return 'post';
-}
-
 for (const category of categoryDefinitions) {
   addNode({
     id: `category:${category.id}`,
@@ -83,7 +76,7 @@ for (const category of categoryDefinitions) {
 }
 
 for (const post of posts) {
-  const kind = graphKindForPost(post);
+  const kind: GraphKind = 'post';
   const postId = `post:${post.data.slug}`;
   const postMeta = [
     formatDate(post.data.pubDate),
@@ -107,7 +100,7 @@ for (const post of posts) {
     meta: postMeta,
     description: excerptFor(post, 190),
     search,
-    featured: post.data.slug === 'list-of-lists',
+    featured: post === posts[0],
   });
 
   const yearId = addFacet('year', String(post.data.pubDate.getUTCFullYear()));
@@ -147,7 +140,7 @@ for (const link of links) {
 }
 
 const graphData = {
-  featuredId: 'post:list-of-lists',
+  featuredId: posts[0] ? `post:${posts[0].data.slug}` : undefined,
   nodes: [...nodes.values()].map((node) => ({
     ...node,
     degree: degree.get(node.id) ?? 0,
@@ -162,7 +155,7 @@ const graphData = {
 };
 ---
 
-<BaseLayout title="Grid" description="A visual map of PurrfectProse reviews, lists, tags, authors, and reading years.">
+<BaseLayout title="Grid" description="A visual map of PurrfectProse reviews, tags, authors, and reading years.">
   <section class="grid-page" data-knowledge-grid>
     <div class="grid-heading">
       <p class="eyebrow">Reading map</p>
@@ -173,11 +166,10 @@ const graphData = {
       <div class="grid-toolbar">
         <label class="grid-search">
           <span>Find</span>
-          <input type="search" placeholder="List of lists, Atwood, audiobooks..." data-grid-search autocomplete="off" />
+          <input type="search" placeholder="Atwood, audiobooks, Ella..." data-grid-search autocomplete="off" />
         </label>
         <div class="grid-modes" aria-label="Graph scope">
-          <button type="button" data-grid-mode="all" aria-pressed="false">All</button>
-          <button type="button" data-grid-mode="lists" aria-pressed="true">Lists</button>
+          <button type="button" data-grid-mode="all" aria-pressed="true">All</button>
           <button type="button" data-grid-mode="reading-with-ella">Ella</button>
           <button type="button" data-grid-mode="monthly-challenge">Challenge</button>
           <button type="button" data-grid-mode="audiobooks">Audio</button>
@@ -191,10 +183,10 @@ const graphData = {
 
       <aside class="grid-inspector" data-grid-inspector aria-live="polite">
         <p class="eyebrow" data-grid-kind>Selected</p>
-        <h2 data-grid-title>List of lists</h2>
+        <h2 data-grid-title>Choose a review</h2>
         <p data-grid-meta></p>
         <p data-grid-description></p>
-        <a class="review-link" href="/list-of-lists/" data-grid-link>Open</a>
+        <a class="review-link" href="#" data-grid-link hidden>Open</a>
       </aside>
     </section>
 
@@ -247,7 +239,7 @@ const graphData = {
         audiobooks: 'category:audiobooks',
       };
 
-      let mode = 'lists';
+      let mode = 'all';
       let query = '';
       let alpha = 1;
       let hovered: any = null;
@@ -279,13 +271,18 @@ const graphData = {
 
       function neighbors(seedIds: Set<string>, depth = 1) {
         const result = new Set(seedIds);
+        let frontier = new Set(seedIds);
         for (let step = 0; step < depth; step += 1) {
+          const next = new Set<string>();
           for (const link of links) {
-            if (result.has(link.source) || result.has(link.target)) {
-              result.add(link.source);
-              result.add(link.target);
+            if (frontier.has(link.source) || frontier.has(link.target)) {
+              if (!result.has(link.source)) next.add(link.source);
+              if (!result.has(link.target)) next.add(link.target);
             }
           }
+          if (next.size === 0) break;
+          next.forEach((id) => result.add(id));
+          frontier = next;
         }
         return result;
       }
@@ -295,9 +292,6 @@ const graphData = {
 
         if (mode === 'all') {
           activeNodeIds = new Set(nodes.map((node: any) => node.id));
-        } else if (mode === 'lists') {
-          nodes.filter((node: any) => node.kind === 'list').forEach((node: any) => seed.add(node.id));
-          activeNodeIds = neighbors(seed, 1);
         } else {
           const categoryId = categoryModes[mode];
           if (categoryId) seed.add(categoryId);

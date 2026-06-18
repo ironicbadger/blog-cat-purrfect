@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import ChallengeList from '@/components/ChallengeList.astro';
 import MetadataTable from '@/components/MetadataTable.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { formatDate, isPublished, slugifyTag } from '@/lib/posts';
+import { challengeReferencesFor, formatDate, isPublished, postUrl, slugifyTag } from '@/lib/posts';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('posts')).filter(isPublished);
@@ -16,7 +16,8 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const allPosts = (await getCollection('posts')).filter(isPublished);
-const isChallengeList = post.data.slug === 'the-list-2026';
+const isChallengeList = (post.data.challengeItems?.length ?? 0) > 0;
+const challengeReferences = isChallengeList ? [] : challengeReferencesFor(post, allPosts);
 
 const coverSrcSelector = post.data.cover ? JSON.stringify(post.data.cover) : undefined;
 const duplicateCoverStyles = coverSrcSelector
@@ -59,13 +60,27 @@ const duplicateCoverStyles = coverSrcSelector
       </div>
       {
         post.data.cover && (
-          <img class="post-hero-cover" src={post.data.cover} alt="" loading="eager" />
+          <img class="post-hero-cover" src={post.data.cover} alt="" loading="eager" decoding="async" fetchpriority="high" />
         )
       }
     </header>
 
     <div class:list={['post-body-grid', { 'is-full-width': isChallengeList }]}>
       <div class="prose">
+        {
+          challengeReferences.length > 0 && (
+            <aside class="challenge-context" aria-label="Monthly challenge context">
+              <p class="eyebrow">Monthly challenge</p>
+              {challengeReferences.map((reference) => (
+                <p>
+                  <a href={postUrl(reference.list)}>{reference.listYear} challenge</a>
+                  <span> / {reference.item.month}</span>
+                  <strong>{reference.item.prompt}</strong>
+                </p>
+              ))}
+            </aside>
+          )
+        }
         <Content />
         {isChallengeList && <ChallengeList post={post} posts={allPosts} />}
       </div>

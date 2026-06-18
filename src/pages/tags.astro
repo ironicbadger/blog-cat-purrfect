@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getAllTags, isPublished } from '@/lib/posts';
+import { getAllTags, isBrowsablePost } from '@/lib/posts';
 
-const posts = (await getCollection('posts')).filter(isPublished);
+const posts = (await getCollection('posts')).filter(isBrowsablePost);
 const tags = getAllTags(posts);
 ---
 

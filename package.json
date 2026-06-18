@@ -9,6 +9,7 @@
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check",
     "migrate:ghost": "node scripts/migrate-ghost.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "validate:covers": "node scripts/validate-covers.mjs"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@astrojs/check": "latest",
     "image-size": "^2.0.2",
+    "sharp": "^0.34.5",
     "typescript": "latest"
   }
 }

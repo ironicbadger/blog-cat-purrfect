@@ -1,6 +1,6 @@
 ---
 import type { Post } from '@/lib/posts';
-import { postUrl } from '@/lib/posts';
+import { listYearFor, postUrl, reviewSlugsForChallengeItem } from '@/lib/posts';
 
 interface Props {
   post: Post;
@@ -10,16 +10,29 @@ interface Props {
 const { post, posts } = Astro.props;
 const items = post.data.challengeItems ?? [];
 const bySlug = new Map(posts.map((entry) => [entry.data.slug, entry]));
+const listYear = listYearFor(post) ?? post.data.pubDate.getUTCFullYear();
 
 function normalize(value = '') {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
 function reviewFor(item: (typeof items)[number]) {
-  if (item.reviewSlug) return bySlug.get(item.reviewSlug);
+  const reviewSlug = reviewSlugsForChallengeItem(item)[0];
+  if (reviewSlug) return bySlug.get(reviewSlug);
   const title = normalize(item.bookTitle);
   if (!title) return undefined;
   return posts.find((entry) => normalize(entry.data.bookTitle).includes(title));
+}
+
+function reviewsFor(item: (typeof items)[number]) {
+  const explicitReviews = reviewSlugsForChallengeItem(item)
+    .map((slug) => bySlug.get(slug))
+    .filter((entry): entry is Post => Boolean(entry));
+
+  if (explicitReviews.length > 0) return explicitReviews;
+
+  const fallbackReview = reviewFor(item);
+  return fallbackReview ? [fallbackReview] : [];
 }
 
 const completed = items.filter((item) => item.done).length;
@@ -29,7 +42,7 @@ const completed = items.filter((item) => item.done).length;
   <div class="challenge-summary">
     <div>
       <p class="eyebrow">Reading challenge</p>
-      <h2 id="challenge-list-heading">2026 master list</h2>
+      <h2 id="challenge-list-heading">{listYear} master list</h2>
     </div>
     <p><strong>{completed}</strong> of <strong>{items.length}</strong> complete</p>
   </div>
@@ -49,9 +62,19 @@ const completed = items.filter((item) => item.done).length;
       <tbody>
         {
           items.map((item) => {
-            const review = reviewFor(item);
+            const reviews = reviewsFor(item);
+            const review = reviews[0];
             const cover = review?.data.cover;
-            const selection = item.bookTitle ?? item.selection ?? 'TBC';
+            const reviewSelections = reviews.map((entry) => entry.data.bookTitle).filter(Boolean);
+            const reviewAuthors = [...new Set(reviews.map((entry) => entry.data.bookAuthor).filter(Boolean))];
+            const selection =
+              item.bookTitle ??
+              (reviewSelections.length > 1 ? reviewSelections.join('; ') : review?.data.bookTitle) ??
+              item.selection ??
+              'TBC';
+            const bookAuthor =
+              item.bookAuthor ??
+              (reviewAuthors.length > 1 ? reviewAuthors.join('; ') : review?.data.bookAuthor);
 
             return (
               <tr class={item.done ? 'is-complete' : 'is-planned'}>
@@ -65,7 +88,7 @@ const completed = items.filter((item) => item.done).length;
                 <td data-label="Cover">
                   {
                     cover ? (
-                      <img class="challenge-cover" src={cover} alt="" loading="lazy" />
+                      <img class="challenge-cover" src={cover} alt="" loading="lazy" decoding="async" />
                     ) : (
                       <span class="challenge-cover-placeholder" aria-hidden="true">
                         {item.month.slice(0, 3)}
@@ -78,12 +101,18 @@ const completed = items.filter((item) => item.done).length;
                 </td>
                 <td data-label="Selection">
                   <span class="challenge-selection">{selection}</span>
-                  {item.bookAuthor && <small>by {item.bookAuthor}</small>}
+                  {bookAuthor && <small>by {bookAuthor}</small>}
                 </td>
                 <td data-label="Review">
                   {
-                    review ? (
-                      <a class="review-link" href={postUrl(review)}>Read</a>
+                    reviews.length > 0 ? (
+                      <div class="challenge-review-links">
+                        {reviews.map((entry, index) => (
+                          <a class="review-link" href={postUrl(entry)}>
+                            {reviews.length > 1 ? `Read ${index + 1}` : 'Read'}
+                          </a>
+                        ))}
+                      </div>
                     ) : (
                       <span class="review-pending">Not posted</span>
                     )

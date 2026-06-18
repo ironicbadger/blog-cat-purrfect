@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import CategoryShowcase from '@/components/CategoryShowcase.astro';
 import FilteredPostList from '@/components/FilteredPostList.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { isPublished, sortPosts, uniqueValues } from '@/lib/posts';
+import { isBrowsablePost, sortPosts, uniqueValues } from '@/lib/posts';
 import { SITE } from '@/lib/site';
 
-const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+const posts = sortPosts((await getCollection('posts')).filter(isBrowsablePost));
 const years = uniqueValues(posts, (post) => String(post.data.pubDate.getUTCFullYear()));
 const tags = uniqueValues(posts, (post) => post.data.tags);
 ---
@@ -24,7 +24,7 @@ const tags = uniqueValues(posts, (post) => post.data.tags);
       </p>
     </div>
     <div class="intro-stats" aria-label="Archive stats">
-      <span><strong>{posts.length}</strong> reviews</span>
+      <span><strong>{posts.length}</strong> review total</span>
       <span><strong>{years.length}</strong> years</span>
       <span><strong>{tags.length}</strong> tags</span>
     </div>

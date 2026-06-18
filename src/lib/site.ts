@@ -7,7 +7,7 @@ export const SITE = {
 
 export const navItems = [
   { href: '/', label: 'Reviews' },
-  { href: '/the-list-2026/', label: '2026 List' },
+  { href: '/lists/', label: 'Lists' },
   { href: '/archive/', label: 'Archive' },
   { href: '/tags/', label: 'Tags' },
   { href: '/grid/', label: 'Grid' },

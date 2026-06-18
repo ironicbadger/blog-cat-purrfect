@@ -3,6 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 import * as cheerio from 'cheerio';
 import yaml from 'js-yaml';
+import sharp from 'sharp';
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
 
@@ -11,7 +12,10 @@ const CONTENT_KEY = process.env.GHOST_CONTENT_KEY ?? '067eb784583d7b71b8724c05a0
 const ROOT = process.cwd();
 const POSTS_DIR = path.join(ROOT, 'src/content/posts');
 const PAGES_DIR = path.join(ROOT, 'src/content/pages');
-const IMAGE_ROOT = path.join(ROOT, 'public/images/ghost');
+const IMAGE_ROOT = path.join(ROOT, 'public/images/covers');
+const IMAGE_MAX_WIDTH = 720;
+const IMAGE_MAX_HEIGHT = 1080;
+const IMAGE_WEBP_QUALITY = 82;
 
 const turndown = new TurndownService({
   headingStyle: 'atx',
@@ -210,8 +214,12 @@ async function downloadImage(src) {
   if (!url.pathname.startsWith('/content/images/')) return src;
 
   const localPathFromContent = url.pathname.replace(/^\/content\/images\//, '');
-  const destination = path.join(IMAGE_ROOT, localPathFromContent);
-  const publicPath = `/images/ghost/${localPathFromContent}`;
+  const parsed = path.posix.parse(localPathFromContent);
+  const sourceExtension = parsed.ext.toLowerCase().replace(/^\./, '');
+  const suffix = sourceExtension && sourceExtension !== 'webp' ? `-${sourceExtension}` : '';
+  const optimizedPath = path.posix.join(parsed.dir, `${parsed.name}${suffix}.webp`);
+  const destination = path.join(IMAGE_ROOT, optimizedPath);
+  const publicPath = `/images/covers/${optimizedPath}`;
   await mkdir(path.dirname(destination), { recursive: true });
 
   const response = await fetch(url);
@@ -221,7 +229,17 @@ async function downloadImage(src) {
   }
 
   const buffer = Buffer.from(await response.arrayBuffer());
-  await writeFile(destination, buffer);
+  const optimized = await sharp(buffer, { animated: false })
+    .rotate()
+    .resize({
+      width: IMAGE_MAX_WIDTH,
+      height: IMAGE_MAX_HEIGHT,
+      fit: 'inside',
+      withoutEnlargement: true,
+    })
+    .webp({ effort: 6, quality: IMAGE_WEBP_QUALITY })
+    .toBuffer();
+  await writeFile(destination, optimized);
   return publicPath;
 }
 

@@ -31,7 +31,13 @@ npm run check
 npm run migrate:ghost
 ```
 
-`npm run migrate:ghost` is the one-time importer used to pull the old Ghost content via the public content API. It writes Markdown files into `src/content/posts` and downloads images into `public/images/ghost`.
+`npm run migrate:ghost` is the one-time importer used to pull the old Ghost content via the public content API. It writes Markdown files into `src/content/posts` and downloads images into `public/images/covers`.
+
+```bash
+npm run optimize:images
+```
+
+`npm run optimize:images` converts migrated image assets into WebP covers under `public/images/covers`, resizing only images that are larger than the site needs.
 
 ## Front matter fields
 

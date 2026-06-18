@@ -2,10 +2,10 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
-import { getAllTags, isPublished, slugifyTag, sortPosts, titleCaseSlug } from '@/lib/posts';
+import { getAllTags, isBrowsablePost, slugifyTag, sortPosts, titleCaseSlug } from '@/lib/posts';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('posts')).filter(isPublished);
+  const posts = (await getCollection('posts')).filter(isBrowsablePost);
   return getAllTags(posts).map((tag) => ({
     params: { tag: tag.slug },
     props: { tagName: tag.name },
@@ -16,7 +16,7 @@ const { tag } = Astro.params;
 const { tagName } = Astro.props;
 const posts = sortPosts(
   (await getCollection('posts')).filter(
-    (post) => isPublished(post) && post.data.tags.some((item) => slugifyTag(item) === tag)
+    (post) => isBrowsablePost(post) && post.data.tags.some((item) => slugifyTag(item) === tag)
   )
 );
 const title = tagName ?? titleCaseSlug(tag ?? '');

@@ -94,6 +94,7 @@ button {
 .review-browser,
 .page-heading,
 .archive-list,
+.list-index,
 .tag-cloud,
 .post-page,
 .post-list {
@@ -973,6 +974,73 @@ h1 {
   text-underline-offset: 0.18em;
 }
 
+.list-index {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.list-year {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: start;
+  border-top: 1px solid var(--line);
+  padding-top: 1.1rem;
+}
+
+.list-year h2 {
+  color: var(--teal);
+  font-size: 1.8rem;
+}
+
+.list-year-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 0.85rem;
+}
+
+.list-index-card {
+  display: grid;
+  gap: 0.65rem;
+  min-height: 178px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.list-index-card:hover {
+  border-color: rgb(40 102 110 / 45%);
+  box-shadow: 0 10px 28px rgb(40 102 110 / 10%);
+}
+
+.list-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.list-card-meta span {
+  color: var(--accent-dark);
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.list-index-card h3 {
+  font-size: clamp(1.3rem, 2vw, 1.75rem);
+}
+
+.list-index-card p {
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
 .tag-cloud {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -1144,6 +1212,41 @@ h1 {
   line-height: 1.35;
 }
 
+.challenge-context {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+  padding: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.challenge-context .eyebrow {
+  margin: 0 0 0.5rem;
+}
+
+.challenge-context p {
+  margin: 0;
+}
+
+.challenge-context p + p {
+  margin-top: 0.8rem;
+}
+
+.challenge-context a {
+  color: var(--accent-dark);
+}
+
+.challenge-context span {
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.challenge-context strong {
+  display: block;
+  margin-top: 0.25rem;
+  line-height: 1.25;
+}
+
 .challenge-list {
   margin-top: 2rem;
 }
@@ -1293,6 +1396,12 @@ h1 {
   display: block;
   color: var(--muted);
   margin-top: 0.2rem;
+}
+
+.challenge-review-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
 .review-link {
@@ -1557,6 +1666,7 @@ h1 {
   .filter-grid,
   .post-card-link,
   .archive-year,
+  .list-year,
   .archive-year li {
     grid-template-columns: 1fr;
   }
