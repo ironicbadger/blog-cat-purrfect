@@ -5,8 +5,8 @@ export const SITE = {
   author: 'Catherine K',
   image: {
     src: '/images/site/social-card.png',
-    width: 718,
-    height: 416,
+    width: '718',
+    height: '416',
     alt: 'A collage of book covers from the PurrfectProse reading shelf.',
   },
 };
