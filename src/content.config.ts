@@ -34,6 +34,7 @@ const posts = defineCollection({
       bookTitle: z.string().optional(),
       bookAuthor: z.string().optional(),
       reviewSlug: z.string().optional(),
+      reviewSlugs: z.array(z.string()).optional(),
       done: z.boolean().default(false),
     })).optional(),
     draft: z.boolean().default(false),

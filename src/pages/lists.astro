@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  excerptFor,
+  formatDate,
+  getAnnualListGroups,
+  isAnnualListPost,
+  isPublished,
+  postUrl,
+  sortPosts,
+} from '@/lib/posts';
+
+const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+const groups = getAnnualListGroups(posts);
+const referenceLists = posts.filter((post) => post.data.slug === 'list-of-lists' && !isAnnualListPost(post));
+
+function progressFor(post: (typeof posts)[number]) {
+  const items = post.data.challengeItems ?? [];
+  if (items.length === 0) return undefined;
+
+  const complete = items.filter((item) => item.done).length;
+  return `${complete} of ${items.length} complete`;
+}
+---
+
+<BaseLayout title="Lists" description="Browse PurrfectProse annual reading challenge lists by year.">
+  <section class="page-heading">
+    <p class="eyebrow">Reading challenge lists</p>
+    <h1>Lists by year</h1>
+    <p>Open any annual challenge list from one place.</p>
+  </section>
+
+  <div class="list-index">
+    {
+      groups.map(([year, yearPosts]) => (
+        <section class="list-year" aria-labelledby={`list-year-${year}`}>
+          <h2 id={`list-year-${year}`}>{year}</h2>
+          <div class="list-year-cards">
+            {
+              yearPosts.map((post) => {
+                const progress = progressFor(post);
+
+                return (
+                  <a class="list-index-card" href={postUrl(post)}>
+                    <div class="list-card-meta">
+                      <span>{progress ?? 'Annual list'}</span>
+                      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                    </div>
+                    <h3>{post.data.title}</h3>
+                    {post.data.description && <p>{excerptFor(post, 170)}</p>}
+                  </a>
+                );
+              })
+            }
+          </div>
+        </section>
+      ))
+    }
+
+    {
+      referenceLists.length > 0 && (
+        <section class="list-year" aria-labelledby="list-reference">
+          <h2 id="list-reference">Reference</h2>
+          <div class="list-year-cards">
+            {
+              referenceLists.map((post) => (
+                <a class="list-index-card" href={postUrl(post)}>
+                  <div class="list-card-meta">
+                    <span>Planning list</span>
+                    <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                  </div>
+                  <h3>{post.data.title}</h3>
+                  {post.data.description && <p>{excerptFor(post, 170)}</p>}
+                </a>
+              ))
+            }
+          </div>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>

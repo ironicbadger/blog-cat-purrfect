@@ -6,6 +6,14 @@ export function isPublished(post: Post) {
   return !post.data.draft;
 }
 
+export function isListPost(post: Post) {
+  return post.filePath?.replace(/\\/g, '/').includes('src/content/posts/lists/') ?? false;
+}
+
+export function isBrowsablePost(post: Post) {
+  return isPublished(post) && !isListPost(post);
+}
+
 export function sortPosts(posts: Post[]) {
   return [...posts].sort(comparePosts);
 }
@@ -100,6 +108,61 @@ export function getYearGroups(posts: Post[]) {
   return [...groups.entries()].sort(([a], [b]) => b - a);
 }
 
+export function isAnnualListPost(post: Post) {
+  return isListPost(post) && (post.data.slug === 'the-list' || /^the-list-\d{4}$/.test(post.data.slug));
+}
+
+export function listYearFor(post: Post) {
+  const slugOrTitleYear = `${post.data.slug} ${post.data.title}`.match(/\b(20\d{2})\b/);
+  if (slugOrTitleYear) return Number(slugOrTitleYear[1]);
+
+  const tagYear = post.data.tags.find((tag) => /^20\d{2}$/.test(tag));
+  return tagYear ? Number(tagYear) : undefined;
+}
+
+export function getAnnualListGroups(posts: Post[]) {
+  const groups = new Map<number, Post[]>();
+
+  for (const post of posts.filter(isAnnualListPost)) {
+    const year = listYearFor(post) ?? post.data.pubDate.getUTCFullYear();
+    const current = groups.get(year) ?? [];
+    current.push(post);
+    groups.set(year, sortPosts(current));
+  }
+
+  return [...groups.entries()].sort(([a], [b]) => b - a);
+}
+
+export type ChallengeItem = NonNullable<Post['data']['challengeItems']>[number];
+
+export type ChallengeReference = {
+  list: Post;
+  listYear: number;
+  item: ChallengeItem;
+  reviewSlugs: string[];
+};
+
+export function reviewSlugsForChallengeItem(item: ChallengeItem) {
+  return [...new Set([item.reviewSlug, ...(item.reviewSlugs ?? [])].filter((slug): slug is string => Boolean(slug)))];
+}
+
+export function challengeReferencesFor(post: Post, posts: Post[]): ChallengeReference[] {
+  return posts
+    .filter((entry) => isAnnualListPost(entry) && entry.data.challengeItems?.length)
+    .flatMap((list) => {
+      const listYear = listYearFor(list) ?? list.data.pubDate.getUTCFullYear();
+      return (list.data.challengeItems ?? [])
+        .map((item) => ({
+          list,
+          listYear,
+          item,
+          reviewSlugs: reviewSlugsForChallengeItem(item),
+        }))
+        .filter((reference) => reference.reviewSlugs.includes(post.data.slug));
+    })
+    .sort((a, b) => b.listYear - a.listYear || a.item.month.localeCompare(b.item.month));
+}
+
 export function postUrl(post: Post) {
   return `/${post.data.slug}/`;
 }
@@ -120,7 +183,7 @@ export const categoryDefinitions = [
   {
     id: 'monthly-challenge',
     label: 'Monthly Challenge',
-    description: 'Themed prompts, reading projects, lists, and Catherine’s recurring challenges.',
+    description: 'Books read for Catherine’s monthly themed prompts and recurring challenges.',
     href: '/category/monthly-challenge/',
   },
   {
@@ -141,7 +204,6 @@ export function readingWithEllaNumber(post: Post) {
 export function postCategories(post: Post): CategoryId[] {
   const categories = new Set<CategoryId>();
   const title = post.data.title.toLowerCase();
-  const slug = post.data.slug.toLowerCase();
   const tags = post.data.tags.map(slugifyTag);
 
   if (readingWithEllaNumber(post) !== undefined || tags.includes('ella')) {
@@ -152,12 +214,7 @@ export function postCategories(post: Post): CategoryId[] {
     categories.add('audiobooks');
   }
 
-  if (
-    /\btheme\b/.test(title) ||
-    slug.includes('-theme-') ||
-    slug.startsWith('premise-') ||
-    tags.includes('themes')
-  ) {
+  if (tags.includes('themes')) {
     categories.add('monthly-challenge');
   }
 

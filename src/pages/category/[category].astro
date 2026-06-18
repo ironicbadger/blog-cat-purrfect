@@ -5,7 +5,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import type { Post } from '@/lib/posts';
 import {
   categoryDefinitions,
-  isPublished,
+  isBrowsablePost,
   postCategories,
   sortPosts,
 } from '@/lib/posts';
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-  const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+  const posts = sortPosts((await getCollection('posts')).filter(isBrowsablePost));
 
   return categoryDefinitions.map((category) => ({
     params: { category: category.id },

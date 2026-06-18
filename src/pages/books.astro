@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { formatDate, getYearGroups, isPublished, postUrl, sortPosts } from '@/lib/posts';
+import { formatDate, getYearGroups, isBrowsablePost, postUrl, sortPosts } from '@/lib/posts';
 
-const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+const posts = sortPosts((await getCollection('posts')).filter(isBrowsablePost));
 const groups = getYearGroups(posts);
 ---
 

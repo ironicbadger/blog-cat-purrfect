@@ -72,7 +72,7 @@ const fallbackReview = randomReviews[0];
                 <div class="cover-row">
                   {row.map((cover) => (
                     <span class="cover-tile">
-                      <img src={cover.src} alt="" loading="lazy" />
+                      <img src={cover.src} alt="" loading="lazy" decoding="async" />
                     </span>
                   ))}
                 </div>
@@ -92,7 +92,7 @@ const fallbackReview = randomReviews[0];
     fallbackReview && (
       <section class="random-review" aria-labelledby="random-review-heading" data-random-review>
         <div class="random-review-media">
-          <img src={fallbackReview.cover} alt="" loading="lazy" data-random-cover />
+          <img src={fallbackReview.cover} alt="" loading="lazy" decoding="async" data-random-cover />
         </div>
         <div class="random-review-copy">
           <div class="random-review-actions">
