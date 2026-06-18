@@ -588,10 +588,12 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
       if (isHeaderSearch && !shell?.contains(target)) hideDropdown();
     });
 
-    const params = new URLSearchParams(location.search);
-    for (const control of controls) {
-      const value = params.get(control.dataset.filter ?? '');
-      if (value !== null) control.value = value;
+    if (!isHeaderSearch) {
+      const params = new URLSearchParams(location.search);
+      for (const control of controls) {
+        const value = params.get(control.dataset.filter ?? '');
+        if (value !== null) control.value = value;
+      }
     }
 
     dropdownOpen = hasActiveFilters(getValues());
