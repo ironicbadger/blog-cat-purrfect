@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from '@/components/PostCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Post } from '@/lib/posts';
+import {
+  categoryDefinitions,
+  isPublished,
+  postCategories,
+  sortPosts,
+} from '@/lib/posts';
+
+type Category = (typeof categoryDefinitions)[number];
+
+interface Props {
+  category: Category;
+  posts: Post[];
+}
+
+export async function getStaticPaths() {
+  const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+
+  return categoryDefinitions.map((category) => ({
+    params: { category: category.id },
+    props: {
+      category,
+      posts: posts.filter((post) => postCategories(post).includes(category.id)),
+    },
+  }));
+}
+
+const { category, posts } = Astro.props;
+---
+
+<BaseLayout title={category.label} description={category.description}>
+  <section class="page-heading category-page-heading">
+    <h1>{category.label}</h1>
+    <p>{category.description}</p>
+    <p class="category-count">
+      <strong>{posts.length}</strong> {posts.length === 1 ? 'review' : 'reviews'}
+    </p>
+  </section>
+
+  <section class="post-list category-post-list" aria-label={`${category.label} reviews`}>
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</BaseLayout>

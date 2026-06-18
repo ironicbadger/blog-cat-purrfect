@@ -6,9 +6,7 @@ export const SITE = {
 };
 
 export const navItems = [
-  { href: '/', label: 'Reviews' },
   { href: '/the-list-2026/', label: '2026 List' },
-  { href: '/archive/', label: 'Archive' },
+  { href: '/books/', label: 'Bookshelf' },
   { href: '/tags/', label: 'Tags' },
-  { href: '/about/', label: 'About' },
 ];

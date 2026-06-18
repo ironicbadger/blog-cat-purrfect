@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import FilteredPostList from '@/components/FilteredPostList.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished, sortPosts } from '@/lib/posts';
+
+const posts = sortPosts((await getCollection('posts')).filter(isPublished));
+---
+
+<BaseLayout title="Filtered view" description="Search and filter PurrfectProse reviews.">
+  <section class="page-heading">
+    <h1>Filtered view</h1>
+  </section>
+
+  <FilteredPostList posts={posts} />
+</BaseLayout>

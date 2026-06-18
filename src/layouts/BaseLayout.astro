@@ -67,11 +67,14 @@ const searchPosts = sortPosts((await getCollection('posts')).filter(isPublished)
       <slot />
     </main>
     <footer class="site-footer">
-      <div>
+      <div class="footer-copy">
         <strong>{SITE.title}</strong>
         <span>Static, searchable, and markdown-powered.</span>
       </div>
-      <a href="/rss.xml">RSS</a>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="/archive/" aria-current={Astro.url.pathname === '/archive/' ? 'page' : undefined}>Archive</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
     </footer>
   </body>
 </html>

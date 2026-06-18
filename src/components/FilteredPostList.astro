@@ -153,6 +153,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
           </select>
         </label>
       </div>
+      {isHeader && <a class="load-filtered-view" href="/search/" data-load-filtered-view hidden>load filtered view</a>}
     </div>
   </div>
 
@@ -160,15 +161,30 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
 </section>
 
 <script>
-  const browser = document.querySelector<HTMLElement>('[data-review-browser]');
+  const browsers = [...document.querySelectorAll<HTMLElement>('[data-review-browser]')];
+  const landingFilterKeys = [
+    'q',
+    'category',
+    'year',
+    'publicationYear',
+    'bookAuthor',
+    'author',
+    'format',
+    'genre',
+    'tag',
+    'outcome',
+  ];
+  const selectedFilterKeys = landingFilterKeys.filter((key) => key !== 'q');
 
-  if (browser) {
+  for (const browser of browsers) {
+    const isHeaderSearch = browser.classList.contains('header-search');
     const cards = [...browser.querySelectorAll<HTMLElement>('[data-post-card]')];
     const controls = [...browser.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-filter]')];
     const searchInput = browser.querySelector<HTMLInputElement>('[data-filter="q"]');
     const shell = browser.querySelector<HTMLElement>('[data-search-shell]');
     const filterToggle = browser.querySelector<HTMLButtonElement>('[data-filter-toggle]');
     const filterPanel = browser.querySelector<HTMLElement>('[data-filter-panel]');
+    const loadFilteredView = browser.querySelector<HTMLAnchorElement>('[data-load-filtered-view]');
     const activeFilters = browser.querySelector<HTMLElement>('[data-active-filters]');
     const resultsRegion = browser.querySelector<HTMLElement>('[data-results-region]');
     const resultsHeading = browser.querySelector<HTMLElement>('[data-results-heading]');
@@ -270,20 +286,31 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
       return Object.values(values).some(Boolean);
     }
 
-    function syncUrl(values: Record<string, string>) {
-      const persistentFilters = [
-        'category',
-        'year',
-        'publicationYear',
-        'bookAuthor',
-        'author',
-        'format',
-        'genre',
-        'tag',
-        'outcome',
-      ];
+    function hasSelectedFilter(values: Record<string, string>) {
+      return selectedFilterKeys.some((key) => Boolean(values[key]));
+    }
+
+    function filteredViewHref(values: Record<string, string>) {
       const params = new URLSearchParams();
-      for (const key of persistentFilters) {
+      for (const key of landingFilterKeys) {
+        const value = values[key];
+        if (value) params.set(key, value);
+      }
+      const query = params.toString();
+      return query ? `/search/?${query}` : '/search/';
+    }
+
+    function syncFilteredViewLink(values: Record<string, string>) {
+      if (!loadFilteredView) return;
+      const visible = hasSelectedFilter(values);
+      loadFilteredView.hidden = !visible;
+      if (visible) loadFilteredView.href = filteredViewHref(values);
+    }
+
+    function syncUrl(values: Record<string, string>) {
+      if (isHeaderSearch) return;
+      const params = new URLSearchParams();
+      for (const key of landingFilterKeys) {
         const value = values[key];
         if (value) params.set(key, value);
       }
@@ -299,7 +326,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
     }
 
     function setDropdownVisibility(active: boolean) {
-      const visible = active && dropdownOpen;
+      const visible = active && (isHeaderSearch ? dropdownOpen : true);
       if (resultsRegion) resultsRegion.hidden = !visible;
       searchInput?.setAttribute('aria-expanded', String(visible));
     }
@@ -423,6 +450,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
       }
 
       setDropdownVisibility(active);
+      syncFilteredViewLink(values);
       if (empty) empty.hidden = !active || visible !== 0;
       if (resultsSummary) {
         resultsSummary.textContent = active
@@ -461,7 +489,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
       filterToggle.setAttribute('aria-expanded', String(!expanded));
       filterToggle.setAttribute('aria-label', expanded ? 'Show filters' : 'Hide filters');
       if (filterPanel) filterPanel.hidden = expanded;
-      hideDropdown();
+      if (isHeaderSearch) hideDropdown();
     });
 
     searchInput?.addEventListener('focus', () => {
@@ -526,7 +554,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
       if (event.key === 'Escape') {
         event.preventDefault();
         event.stopPropagation();
-        hideDropdown(true);
+        if (isHeaderSearch) hideDropdown(true);
       }
     });
 
@@ -545,7 +573,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
         filterToggle?.focus();
         return;
       }
-      if (dropdownOpen) hideDropdown();
+      if (isHeaderSearch && dropdownOpen) hideDropdown();
     });
 
     controls.forEach((control) =>
@@ -557,23 +585,7 @@ const categoryLabels = Object.fromEntries(categoryDefinitions.map((category) => 
 
     document.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
-      if (!shell?.contains(target)) hideDropdown();
-    });
-
-    document.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      const link = target.closest<HTMLAnchorElement>('a.category-card[href]');
-      if (!link) return;
-
-      const url = new URL(link.href);
-      const category = url.searchParams.get('category');
-      if (!category) return;
-
-      event.preventDefault();
-      const categoryControl = controls.find((control) => control.dataset.filter === 'category');
-      if (categoryControl) categoryControl.value = category;
-      dropdownOpen = true;
-      applyFilters();
+      if (isHeaderSearch && !shell?.contains(target)) hideDropdown();
     });
 
     const params = new URLSearchParams(location.search);

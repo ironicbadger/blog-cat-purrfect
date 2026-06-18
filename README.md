@@ -33,6 +33,21 @@ npm run migrate:ghost
 
 `npm run migrate:ghost` is the one-time importer used to pull the old Ghost content via the public content API. It writes Markdown files into `src/content/posts` and downloads images into `public/images/ghost`.
 
+## Deploying
+
+Cloudflare Pages project: `cat-blog-purrfect`
+
+Production URL: `https://cat-blog-purrfect.pages.dev/`
+
+GitHub Actions builds and deploys the site from `.github/workflows/cloudflare-pages.yml`. Pull requests run `npm run check` and `npm run build`; pushes deploy the built `dist/` directory with Wrangler. Pushing `main` updates production, and pushing any other branch creates a Cloudflare Pages preview deployment.
+
+Add these repository secrets before relying on the workflow:
+
+- `CLOUDFLARE_ACCOUNT_ID`: `87f000053c6198ee887e7781685c58f1`
+- `CLOUDFLARE_API_TOKEN`: a Cloudflare API token with `Account > Cloudflare Pages > Edit` permission for this account
+
+Do not commit the API token to the repo.
+
 ## Front matter fields
 
 Core fields:

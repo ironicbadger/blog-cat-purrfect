@@ -115,19 +115,19 @@ export const categoryDefinitions = [
     id: 'reading-with-ella',
     label: 'Reading with Ella',
     description: 'Shared reads, chapter books, picture-book discoveries, and Ella verdicts.',
-    href: '/?category=reading-with-ella',
+    href: '/category/reading-with-ella/',
   },
   {
     id: 'monthly-challenge',
     label: 'Monthly Challenge',
     description: 'Themed prompts, reading projects, lists, and Catherine’s recurring challenges.',
-    href: '/?category=monthly-challenge',
+    href: '/category/monthly-challenge/',
   },
   {
     id: 'audiobooks',
     label: 'Audiobooks',
     description: 'Listened reads, narrator notes, and reviews for the queue.',
-    href: '/?category=audiobooks',
+    href: '/category/audiobooks/',
   },
 ] as const;
 
