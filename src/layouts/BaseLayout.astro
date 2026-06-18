@@ -29,7 +29,11 @@ const searchPosts = sortPosts((await getCollection('posts')).filter(isPublished)
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="canonical" href={canonical} />
     <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={pageTitle} />
@@ -45,7 +49,7 @@ const searchPosts = sortPosts((await getCollection('posts')).filter(isPublished)
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="/" aria-label={`${SITE.title} home`}>
-          <span class="brand-mark">P</span>
+          <img class="brand-mark" src="/images/site/cat-logo.png" alt="" width="42" height="42" decoding="async" />
           <span class="brand-copy">
             <strong>{SITE.title}</strong>
             <small>Cat's Book Reviews</small>
