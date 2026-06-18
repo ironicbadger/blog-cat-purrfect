@@ -1,3 +1,7 @@
+# Show the available authoring commands
+_default:
+    @just --list
+
 # Create a new draft post from the review template
 new:
     @node scripts/new-post.mjs
