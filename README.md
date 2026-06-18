@@ -5,12 +5,13 @@ This is a static Astro replacement for the old Ghost site at `https://purrfectpr
 ## Daily writing flow
 
 1. Run `just new` and enter the post title.
-2. Edit the generated draft in `src/content/posts/YYYY/`.
-3. Fill in the front matter and write the review below it in Markdown.
-4. Run `just serve` to build and preview locally.
-5. Remove `draft: true` when the post is ready.
-6. Run `just check` before publishing.
-7. Run `just publish` to commit and push the site.
+2. Paste a public cover image URL when prompted, or press Enter to skip it.
+3. Edit the generated draft in `src/content/posts/YYYY/`.
+4. Fill in the front matter and write the review below it in Markdown.
+5. Run `just serve` to build and preview locally.
+6. Remove `draft: true` when the post is ready.
+7. Run `just check` before publishing.
+8. Run `just publish` to commit and push the site.
 
 The public URL comes from the `slug` field, not the filename. For example:
 
@@ -94,7 +95,7 @@ Obsidian can open this repo as a vault. The most useful folder to pin is:
 src/content/posts
 ```
 
-Images can live in `public/images/covers` and be referenced as `/images/covers/filename.jpg`.
+When `just new` gets a cover image URL, it downloads the image, converts it to WebP, resizes it for the site, saves it under `public/images/covers/YYYY/MM/`, and fills in the `cover` field automatically.
 
 ## Built-in pages
 
