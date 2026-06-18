@@ -4,11 +4,13 @@ This is a static Astro replacement for the old Ghost site at `https://purrfectpr
 
 ## Daily writing flow
 
-1. Copy `templates/review.md` into `src/content/posts/`.
-2. Rename it to something like `2026-06-20-my-book-review.md`.
+1. Run `just new` and enter the post title.
+2. Edit the generated draft in `src/content/posts/YYYY/`.
 3. Fill in the front matter and write the review below it in Markdown.
-4. Run `npm run dev` to preview locally.
-5. Run `npm run build` before deploying.
+4. Run `just serve` to build and preview locally.
+5. Remove `draft: true` when the post is ready.
+6. Run `just check` before publishing.
+7. Run `just publish` to commit and push the site.
 
 The public URL comes from the `slug` field, not the filename. For example:
 
@@ -25,11 +27,14 @@ builds:
 ## Useful commands
 
 ```bash
-npm run dev
-npm run build
-npm run check
+just new
+just check
+just serve
+just publish
 npm run migrate:ghost
 ```
+
+`just publish` stages all current repo changes, creates an automatic commit message, and pushes the current branch.
 
 `npm run migrate:ghost` is the one-time importer used to pull the old Ghost content via the public content API. It writes Markdown files into `src/content/posts` and downloads images into `public/images/covers`.
 
