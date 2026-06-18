@@ -1,6 +1,6 @@
 ---
 import type { Post } from '@/lib/posts';
-import { formatDate } from '@/lib/posts';
+import { formatDate, slugifyTag } from '@/lib/posts';
 
 interface Props {
   post: Post;
@@ -8,28 +8,49 @@ interface Props {
 
 const { post } = Astro.props;
 const rows = [
-  ['Book', post.data.bookTitle],
-  ['Book author', post.data.bookAuthor],
-  ['Published', post.data.publicationYear ? String(post.data.publicationYear) : undefined],
-  ['Finished', post.data.dateFinished ? formatDate(post.data.dateFinished) : undefined],
-  ['Format', post.data.format],
-  ['Outcome', post.data.outcome],
-  ['Rating', post.data.rating ? String(post.data.rating) : undefined],
-  ['Genres', post.data.genres.join(', ')],
-].filter(([, value]) => value);
+  { label: 'Book', value: post.data.bookTitle },
+  { label: 'Book author', value: post.data.bookAuthor },
+  { label: 'Published', value: post.data.publicationYear ? String(post.data.publicationYear) : undefined },
+  { label: 'Finished', value: post.data.dateFinished ? formatDate(post.data.dateFinished) : undefined },
+  {
+    label: 'Format',
+    value: post.data.format,
+    href: post.data.format ? `/search/?format=${encodeURIComponent(post.data.format)}` : undefined,
+  },
+  { label: 'Outcome', value: post.data.outcome },
+  { label: 'Rating', value: post.data.rating ? String(post.data.rating) : undefined },
+].filter((row): row is { label: string; value: string; href?: string } => Boolean(row.value));
+
+const genres = post.data.genres.filter(Boolean);
 ---
 
 {
-  rows.length > 0 && (
+  (rows.length > 0 || genres.length > 0) && (
     <aside class="metadata-panel" aria-label="Book metadata">
       <h2>Details</h2>
       <dl>
-        {rows.map(([label, value]) => (
+        {rows.map(({ label, value, href }) => (
           <>
             <dt>{label}</dt>
-            <dd>{value}</dd>
+            <dd>
+              {href ? <a class="metadata-value-link" href={href}>{value}</a> : value}
+            </dd>
           </>
         ))}
+        {genres.length > 0 && (
+          <>
+            <dt>Genres</dt>
+            <dd>
+              <ul class="metadata-link-list">
+                {genres.map((genre) => (
+                  <li>
+                    <a href={`/search/?genre=${encodeURIComponent(slugifyTag(genre))}`}>{genre}</a>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </>
+        )}
       </dl>
     </aside>
   )

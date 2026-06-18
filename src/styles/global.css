@@ -1403,7 +1403,7 @@ h1 {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(160px, 240px);
   gap: 2rem;
-  align-items: end;
+  align-items: start;
   border-bottom: 1px solid var(--line);
   padding-bottom: 2rem;
 }
@@ -1435,9 +1435,10 @@ h1 {
 
 .post-body-grid {
   display: grid;
-  grid-template-columns: minmax(0, 720px) 280px;
+  grid-template-columns: minmax(0, 720px) minmax(160px, 240px);
   gap: 2rem;
   align-items: start;
+  justify-content: space-between;
 }
 
 .post-body-grid.is-full-width {
@@ -1513,6 +1514,8 @@ h1 {
 .metadata-panel {
   position: sticky;
   top: 92px;
+  width: 135%;
+  justify-self: end;
   border: 1px solid var(--line);
   background: var(--surface);
   border-radius: var(--radius);
@@ -1540,6 +1543,46 @@ h1 {
 .metadata-panel dd {
   margin: 0.15rem 0 0;
   line-height: 1.35;
+}
+
+.metadata-value-link {
+  color: var(--accent-dark);
+  font-weight: 700;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.metadata-value-link:hover,
+.metadata-value-link:focus-visible {
+  color: var(--ink);
+}
+
+.metadata-link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+}
+
+.metadata-link-list a {
+  display: inline-block;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: #38545a;
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1;
+  padding: 0.42rem 0.58rem;
+  text-decoration: none;
+}
+
+.metadata-link-list a:hover,
+.metadata-link-list a:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
 }
 
 .challenge-context {
@@ -1852,6 +1895,8 @@ h1 {
 
   .metadata-panel {
     position: static;
+    width: 100%;
+    justify-self: stretch;
   }
 
   .search-support {
