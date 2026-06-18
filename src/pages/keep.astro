@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate, getYearGroups, isBrowsablePost, postUrl, sortPosts } from '@/lib/posts';
+
+const posts = sortPosts(
+  (await getCollection('posts')).filter(
+    (post) => isBrowsablePost(post) && post.data.tags.some((tag) => tag.trim().toUpperCase() === 'KEEP')
+  )
+);
+const groups = getYearGroups(posts);
+---
+
+<BaseLayout title="Keep" description="A visual shelf of every PurrfectProse book tagged KEEP.">
+  <section class="page-heading bookshelf-heading">
+    <h1>Keep</h1>
+    <p>A cover-led shelf of every book tagged KEEP, newest first.</p>
+    <p class="bookshelf-count">
+      <strong>{posts.length}</strong> {posts.length === 1 ? 'book' : 'books'} total
+    </p>
+  </section>
+
+  <div class="bookshelf-list">
+    {
+      groups.map(([year, yearPosts]) => (
+        <section class="bookshelf-year" aria-labelledby={`keep-${year}`}>
+          <div class="bookshelf-year-label">
+            <h2 id={`keep-${year}`}>{year}</h2>
+            <span>{yearPosts.length} {yearPosts.length === 1 ? 'book' : 'books'}</span>
+          </div>
+          <div class="bookshelf-grid">
+            {yearPosts.map((post) => {
+              const title = post.data.bookTitle ?? post.data.title;
+              const context = post.data.bookTitle ? post.data.title : undefined;
+              const initial = title.trim().charAt(0) || 'P';
+
+              return (
+                <article class="bookshelf-card">
+                  <a href={postUrl(post)} aria-label={`Read ${title}`}>
+                    <div class="bookshelf-cover-frame">
+                      {
+                        post.data.cover ? (
+                          <img src={post.data.cover} alt="" loading="lazy" />
+                        ) : (
+                          <span class="bookshelf-cover-placeholder" aria-hidden="true">{initial}</span>
+                        )
+                      }
+                    </div>
+                    <div class="bookshelf-card-copy">
+                      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                      <h3>{title}</h3>
+                      {post.data.bookAuthor && <p class="book-line">by {post.data.bookAuthor}</p>}
+                      {context && <p>{context}</p>}
+                      <div class="bookshelf-meta">
+                        {post.data.format && <span>{post.data.format}</span>}
+                        {post.data.publicationYear && <span>Published {post.data.publicationYear}</span>}
+                      </div>
+                    </div>
+                  </a>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
